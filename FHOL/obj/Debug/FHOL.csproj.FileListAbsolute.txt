@@ -1,0 +1,6 @@
+C:\FHOL\FHOL\bin\FHOL.dll.config
+C:\FHOL\FHOL\bin\FHOL.dll
+C:\FHOL\FHOL\bin\FHOL.pdb
+C:\FHOL\FHOL\obj\Debug\FHOL.csprojResolveAssemblyReference.cache
+C:\FHOL\FHOL\obj\Debug\FHOL.dll
+C:\FHOL\FHOL\obj\Debug\FHOL.pdb
