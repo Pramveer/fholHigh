@@ -4,3 +4,12 @@ C:\FHOL\FHOL\bin\FHOL.pdb
 C:\FHOL\FHOL\obj\Debug\FHOL.csprojResolveAssemblyReference.cache
 C:\FHOL\FHOL\obj\Debug\FHOL.dll
 C:\FHOL\FHOL\obj\Debug\FHOL.pdb
+C:\FHOLDB\fholHigh\FHOL\bin\FHOL.dll.config
+C:\FHOLDB\fholHigh\FHOL\bin\FHOL.dll
+C:\FHOLDB\fholHigh\FHOL\bin\FHOL.pdb
+C:\FHOLDB\fholHigh\FHOL\obj\Debug\FHOL.dll
+C:\FHOLDB\fholHigh\FHOL\obj\Debug\FHOL.pdb
+C:\FHOLDB\fholHigh\FHOL\obj\Debug\FHOL.csprojResolveAssemblyReference.cache
+C:\FHOLDB\fholHigh\FHOL\bin\DotNet.Highcharts.dll
+C:\FHOLDB\fholHigh\FHOL\bin\DotNet.Highcharts.pdb
+C:\FHOLDB\fholHigh\FHOL\bin\DotNet.Highcharts.xml
