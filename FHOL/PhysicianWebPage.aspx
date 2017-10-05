@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="PhysicianWebPage.aspx.cs" Inherits="FHOL.PhysicianWebPage" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="PhysicianWebPage.aspx.cs" Inherits="FHOL.PhysicianWebPage" EnableEventValidation="false" %>
 
 <!DOCTYPE html>
 
@@ -143,15 +143,38 @@
             modal: true
         });
     }
+
+    function ShowPopupPatient() {
+        $("#dialogPatient").dialog({
+            title: "Patient Compliance",
+            width: 450,
+            buttons: {
+                Ok: function () {
+                    $(this).dialog('close');
+                }
+            },
+            modal: true
+        });
+    }
+
+
+    function ShowAlert(a)
+    {     
+        document.getElementById("<%= patComp.ClientID %>").value = a;
+        __doPostBack("lblPc");
+    }
 </script>
 </head>
 <body>
     <form id="form1" runat="server">
          <div>
             <div class="fullwidth">
+                <asp:HiddenField ID="patComp" runat ="server" />
+                <asp:LinkButton ID="lblPc" runat="server" OnClick="lblPc_Click"></asp:LinkButton>
                 <div class="patient_Continuum_Shapshot_title">
                     <b>Time Duration</b>
                     <asp:DropDownList ID="t" runat="server" Width="150px" Height="25px">
+                         <asp:ListItem Text="2016"  Value="2016"  />
                         <asp:ListItem Text="2017"  Value="2017"  />
                       
                     </asp:DropDownList>
@@ -276,6 +299,16 @@
             <asp:BoundField DataField="PatientName" HeaderText="Patient Name" ItemStyle-Width="180" />
              <asp:BoundField DataField="DOB" HeaderText="DOB" ItemStyle-Width="80" />
              <asp:BoundField DataField="AlertDate" HeaderText="Alert Date" ItemStyle-Width="80" DataFormatString="{0:MM/dd/yyyy}" />
+        </Columns>
+    </asp:GridView>
+</div>
+              <div id="dialogPatient" style="display: none">
+            <asp:GridView ID="grdPatients" runat="server" AutoGenerateColumns="false" AllowPaging="true" PageSize="15" >
+        <Columns>
+            <asp:BoundField DataField="Patient" HeaderText="Patient Name" ItemStyle-Width="180" />
+             <asp:BoundField DataField="DOB" HeaderText="DOB" ItemStyle-Width="80" />
+             <asp:BoundField DataField="testnum" HeaderText="Test Counts" ItemStyle-Width="80" />
+             <asp:BoundField DataField="TestDate" HeaderText="Test Date" ItemStyle-Width="80" DataFormatString="{0:MM/dd/yyyy}" />
         </Columns>
     </asp:GridView>
 </div>

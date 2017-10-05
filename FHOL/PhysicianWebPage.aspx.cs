@@ -80,6 +80,8 @@ namespace FHOL
             ClientScript.RegisterStartupScript(this.GetType(), "Popup", "ShowPopup();", true);
         }
 
+       
+
         private void BindGrid()
         {
             string userId = ReturnUserID(DbConnection, "Nisha");
@@ -88,6 +90,13 @@ namespace FHOL
             grdAlerts.DataBind();
         }
 
+        private void BindPatientCompliance()
+        {
+            string userId = ReturnUserID(DbConnection, "Nisha"); 
+           DataTable dt =  ReturnPatientCompliance_DataTable(DbConnection, Convert.ToInt16(userId));
+           grdPatients.DataSource = dt;
+           grdPatients.DataBind();
+        }
 
         private void BindPatientCompliance( DataTable patientcompliance)
         {
@@ -115,6 +124,7 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
                             DotNet.Highcharts.Highcharts chart = new DotNet.Highcharts.Highcharts("chart")
                             .SetTitle(new Title { Text = "" })
                             .SetCredits(new Credits { Enabled = false})
+
                      .SetTooltip(new Tooltip { Formatter = "function() { return '<b>Counts = </b>'+ this.point.yvalue + '<br/> <b>% = </b>' +this.percentage +' %'; }" })
                                 .SetPlotOptions(new PlotOptions
                                 {
@@ -128,6 +138,11 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
                                             ConnectorColor = ColorTranslator.FromHtml("#000000"),
                                             Formatter = "function() { return ''+ this.percentage +' %'; }"
                                         },
+                                    //   Events = new PlotOptionsPieEvents { Click = "function(event) { ShowAlert("+lblopenalert.ClientID+",this.name); }" },
+                                        Point = new PlotOptionsPiePoint { Events = new PlotOptionsPiePointEvents { LegendItemClick = "function(event) { event.preventDefault();  ShowAlert(this.name); }" }
+                                        }, 
+
+
                                         ShowInLegend = true
                                     }
                                    
@@ -136,7 +151,7 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
                     .SetSeries(new[] { 
                 new Series
                 {
-                  Type = ChartTypes.Pie,     Data = new Data(pieData.ToArray())
+                  Type = ChartTypes.Pie, Data = new Data(pieData.ToArray() )
                 }});
 
                             ltrChart.Text = chart.ToHtmlString();
@@ -373,6 +388,12 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
             string name = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(monthNum);
 
             return name;
+        }
+
+        protected void lblPc_Click(object sender, EventArgs e)
+        {
+            BindPatientCompliance();
+            ClientScript.RegisterStartupScript(this.GetType(), "Popup", "ShowPopupPatient();", true);
         }
 
     }
