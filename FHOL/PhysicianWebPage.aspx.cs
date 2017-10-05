@@ -12,6 +12,7 @@ using DotNet.Highcharts;
 using DotNet.Highcharts.Helpers;
 using DotNet.Highcharts.Options;
 using DotNet.Highcharts.Enums;
+using System.Drawing;
 
 
 namespace FHOL
@@ -26,7 +27,6 @@ namespace FHOL
             DbConnection = new SqlConnection(strcon);
             if (Membership.ValidateUser("Nisha", "Nisha123!"))
             {
-
                 if (!IsPostBack)
                 {
                     try
@@ -36,19 +36,10 @@ namespace FHOL
                             string userId = ReturnUserID(DbConnection, "Nisha");
                             DataTable dt = ReturnOpenAlerts_DataTable(DbConnection, userId);
                             lblopenalert.Text = dt.Rows.Count.ToString();
-
-                            DotNet.Highcharts.Highcharts chart = new DotNet.Highcharts.Highcharts("chart")
-                    .SetXAxis(new XAxis
-                    {
-                        Categories = new[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
-                    })
-                    .SetSeries(new[] { 
-                new Series
-                {
-                  Type = ChartTypes.Pie,  Data = new Data(new object[] { 19.9, 21.5, 86.4, 99.2, 144.0, 176.0, 635.6, 648.5, 346.4, 121.1, 95.6, 100.4 })
-                }});
-
-                            ltrChart.Text = chart.ToHtmlString();
+                            DataTable patientcompliance = ReturnPatientCompliance_DataTable(DbConnection, Convert.ToInt16(userId));                           
+                             BindPatientCompliance(patientcompliance);
+                            DataTable Comparativepatientcompliance = ReturnPatientCompliance_DataTable(DbConnection, 0);
+                            comparativeBindPatientCompliance(Comparativepatientcompliance);
                         }
                     }
                     catch { }
@@ -90,6 +81,133 @@ namespace FHOL
             grdAlerts.DataSource = dt;
             grdAlerts.DataBind();
         }
+
+        private void BindPatientCompliance( DataTable patientcompliance)
+        {
+DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
+                            DataRow[] resultlessthan8 = patientcompliance.Select("testnum < 8");
+                            int morethan8 = 0, lessthan8 = 0;
+                            Double permorethan8 = 0, perlessthan8 = 0;
+                            //foreach (DataRow row in resultmorethan8)
+                            //{
+                            morethan8 = resultmorethan8.Length;// morethan8 + Convert.ToInt16(row["testnum"].ToString());
+                            //}
+                            //foreach (DataRow row in resultlessthan8)
+                            //{
+                            lessthan8 = resultlessthan8.Length;// lessthan8 + Convert.ToInt16(row["testnum"].ToString());
+                            //}
+                            if (morethan8 > 0)
+                                permorethan8 = Math.Round(((Double)morethan8 / (patientcompliance.Rows.Count)) * 100, 2); // Math.Round(((Double)morethan8 / (morethan8 + lessthan8)) * 100, 2);
+                            if (lessthan8 > 0)
+                                perlessthan8 = Math.Round(((Double)lessthan8 / (patientcompliance.Rows.Count)) * 100, 2);
+
+                            List<PieSeriesData> pieData = new List<PieSeriesData>();
+                            pieData.Add(new PieSeriesData { Name = " >=8 ", Y = permorethan8, yvalue = morethan8 });
+                            pieData.Add(new PieSeriesData { Name = " <8 ", Y = perlessthan8, yvalue = lessthan8 });
+                                               
+
+                            DotNet.Highcharts.Highcharts chart = new DotNet.Highcharts.Highcharts("chart")
+                            .SetTitle(new Title { Text = "" })
+                            .SetCredits(new Credits { Enabled = false})
+                     .SetTooltip(new Tooltip { Formatter = "function() { return '<b>Counts = </b>'+ this.point.yvalue + '<br/> <b>% = </b>' +this.percentage +' %'; }" })
+                                .SetPlotOptions(new PlotOptions
+                                {
+                                    Pie = new PlotOptionsPie
+                                    {
+                                        AllowPointSelect = true,
+                                        Cursor = Cursors.Pointer,
+                                        DataLabels = new PlotOptionsPieDataLabels
+                                        {
+                                            Color = ColorTranslator.FromHtml("#000000"),
+                                            ConnectorColor = ColorTranslator.FromHtml("#000000"),
+                                            Formatter = "function() { return ''+ this.percentage +' %'; }"
+                                        },
+                                        ShowInLegend = true
+                                    }
+                                   
+                                })
+                                
+                    .SetSeries(new[] { 
+                new Series
+                {
+                  Type = ChartTypes.Pie,     Data = new Data(pieData.ToArray())
+                }});
+
+                            ltrChart.Text = chart.ToHtmlString();
+
+        }
+
+        private void comparativeBindPatientCompliance(DataTable patientcompliance)
+        {
+            DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
+            DataRow[] resultlessthan8 = patientcompliance.Select("testnum < 8");
+            int morethan8 = 0, lessthan8 = 0;
+            Double permorethan8 = 0, perlessthan8 = 0;
+            //foreach (DataRow row in resultmorethan8)
+            //{
+            morethan8 = resultmorethan8.Length;// morethan8 + Convert.ToInt16(row["testnum"].ToString());
+            //}
+            //foreach (DataRow row in resultlessthan8)
+            //{
+            lessthan8 = resultlessthan8.Length;// lessthan8 + Convert.ToInt16(row["testnum"].ToString());
+            //}
+            if (morethan8 > 0)
+                permorethan8 = Math.Round(((Double)morethan8 / (patientcompliance.Rows.Count)) * 100, 2); // Math.Round(((Double)morethan8 / (morethan8 + lessthan8)) * 100, 2);
+            if (lessthan8 > 0)
+                perlessthan8 = Math.Round(((Double)lessthan8 / (patientcompliance.Rows.Count)) * 100, 2);
+
+            List<PieSeriesData> pieData = new List<PieSeriesData>();
+            pieData.Add(new PieSeriesData { Name = " >=8 ", Y = permorethan8, yvalue = morethan8 });
+            pieData.Add(new PieSeriesData { Name = " <8 ", Y = perlessthan8, yvalue = lessthan8 });
+
+
+            DotNet.Highcharts.Highcharts chartt = new DotNet.Highcharts.Highcharts("chartt")
+            .SetTitle(new Title { Text = "" })
+            .SetCredits(new Credits { Enabled = false })
+            
+     .SetTooltip(new Tooltip { Formatter = "function() { return '<b>Counts = </b>'+ this.point.yvalue + '<br/> <b>% = </b>' +this.percentage +' %'; }" })
+                .SetPlotOptions(new PlotOptions
+                {
+                    Pie = new PlotOptionsPie
+                    {
+                        AllowPointSelect = true,
+                        Cursor = Cursors.Pointer,
+                        Colors = { "#000000", "#cccccc" },
+                        DataLabels = new PlotOptionsPieDataLabels
+                        {
+                            Color = ColorTranslator.FromHtml("#000000"),
+                            ConnectorColor = ColorTranslator.FromHtml("#000000"),
+                            Formatter = "function() { return ''+ this.percentage +' %'; }"
+                        },
+                        ShowInLegend = true
+                    }
+                })
+
+    .SetSeries(new[] { 
+                new Series
+                {
+                  Type = ChartTypes.Pie,     Data = new Data(pieData.ToArray())
+                }});
+
+
+            ltrComparativeChart.Text = chartt.ToHtmlString();
+
+        }
+
+        private DataTable ReturnPatientCompliance_DataTable(SqlConnection dbconn, int userid)
+        {
+            string sqlstringalert = "sp_ProviderDashboard_PatientComplianceChartData";
+            SqlCommand comm = new SqlCommand(sqlstringalert, dbconn);
+            comm.CommandType = CommandType.StoredProcedure;
+            comm.Parameters.AddWithValue("@PrescribingECPID", userid);
+            dbconn.Open();
+            comm.ExecuteNonQuery();
+            DataTable dt_patientcompliance = new DataTable();
+            dt_patientcompliance.Load(comm.ExecuteReader());
+            dbconn.Close();
+            return dt_patientcompliance;
+        }
+
 
     }
 }

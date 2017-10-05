@@ -256,7 +256,7 @@
                         <tbody style="border: 1px solid #ccc; border-right: none;">
                             <tr>
                                 <td>
-                                    <img src="tests.png" style="width: 100%; height: 272px;" />
+                                    <asp:Literal ID="ltrComparativeChart" Text="text" runat="server" />
                                 </td>
                             </tr>
                         </tbody>
