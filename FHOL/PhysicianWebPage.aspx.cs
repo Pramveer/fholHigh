@@ -109,9 +109,8 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
                                 perlessthan8 = Math.Round(((Double)lessthan8 / (patientcompliance.Rows.Count)) * 100, 2);
 
                             List<PieSeriesData> pieData = new List<PieSeriesData>();
-                            pieData.Add(new PieSeriesData { Name = " >=8 ", Y = permorethan8, yvalue = morethan8 });
-                            pieData.Add(new PieSeriesData { Name = " <8 ", Y = perlessthan8, yvalue = lessthan8 });
-                                               
+                            pieData.Add(new PieSeriesData { Name = " >=8 ", Y = permorethan8, yvalue = morethan8, Color = ColorTranslator.FromHtml("#5b9bd5") });
+                            pieData.Add(new PieSeriesData { Name = " <8 ", Y = perlessthan8, yvalue = lessthan8, Color = ColorTranslator.FromHtml("#70ad47") });
 
                             DotNet.Highcharts.Highcharts chart = new DotNet.Highcharts.Highcharts("chart")
                             .SetTitle(new Title { Text = "" })
@@ -164,8 +163,8 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
                 perlessthan8 = Math.Round(((Double)lessthan8 / (patientcompliance.Rows.Count)) * 100, 2);
 
             List<PieSeriesData> pieData = new List<PieSeriesData>();
-            pieData.Add(new PieSeriesData { Name = " >=8 ", Y = permorethan8, yvalue = morethan8 });
-            pieData.Add(new PieSeriesData { Name = " <8 ", Y = perlessthan8, yvalue = lessthan8 });
+            pieData.Add(new PieSeriesData { Name = " >=8 ", Y = permorethan8, yvalue = morethan8, Color = ColorTranslator.FromHtml("#5b9bd5") });
+            pieData.Add(new PieSeriesData { Name = " <8 ", Y = perlessthan8, yvalue = lessthan8, Color = ColorTranslator.FromHtml("#70ad47") });
 
 
             DotNet.Highcharts.Highcharts chartt = new DotNet.Highcharts.Highcharts("chartt")

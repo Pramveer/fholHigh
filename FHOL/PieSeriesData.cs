@@ -10,5 +10,6 @@ namespace FHOL
         public string Name { get; set; }
         public double Y { get; set; }
         public int yvalue { get; set; }
+        public System.Drawing.Color Color { get; set; }
     }
 }
