@@ -40,6 +40,33 @@ namespace FHOL {
         protected global::System.Web.UI.WebControls.LinkButton lblopenalert;
         
         /// <summary>
+        /// RxTrendActivatedPatient control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal RxTrendActivatedPatient;
+        
+        /// <summary>
+        /// EnrolledPatientStatusChart control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal EnrolledPatientStatusChart;
+        
+        /// <summary>
+        /// ActivePatientsChart control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal ActivePatientsChart;
+        
+        /// <summary>
         /// ltrChart control.
         /// </summary>
         /// <remarks>
