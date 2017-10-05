@@ -187,7 +187,7 @@
                         <tbody style="border: 1px solid #ccc; border-right: none;">
                             <tr>
                                 <td>
-                                    <img src="Trend.png" style="width: 100%; height: 280px;" />
+                                    <asp:Literal ID="RxTrendActivatedPatient" Text="text" runat="server" />
                                 </td>
                             </tr>
                         </tbody>
@@ -203,7 +203,7 @@
                         <tbody style="border: 1px solid #ccc; border-right: none;">
                             <tr>
                                 <td>
-                                    <img src="enrolled.png" style="width: 100%; height: 272px;" />
+                                    <asp:Literal ID="EnrolledPatientStatusChart" Text="text" runat="server" />
                                 </td>
                             </tr>
                         </tbody>
@@ -222,7 +222,7 @@
                         <tbody style="border: 1px solid #ccc; border-right: none;">
                             <tr>
                                 <td>
-                                    <img src="activepatients.png" style="width: 100%; height: 280px;" />
+                                    <asp:Literal ID="ActivePatientsChart" Text="text" runat="server" />
                                 </td>
                             </tr>
                         </tbody>
