@@ -145,9 +145,16 @@
     }
 
     function ShowPopupPatient() {
+        var legend = document.getElementById("<%= patComp.ClientID %>").value;
+        var reporttype = document.getElementById("<%= reporttype.ClientID %>").value;
+        var label = "";
+        if (reporttype == "0")
+            label = "Patient Compliance" + legend;
+        else if (reporttype == "1")
+            label = "Comparative Baseline Compliance" + legend;
         $("#dialogPatient").dialog({
-            title: "Patient Compliance",
-            width: 450,
+            title: label,
+            width: 650,
             buttons: {
                 Ok: function () {
                     $(this).dialog('close');
@@ -158,9 +165,10 @@
     }
 
 
-    function ShowAlert(a)
+    function ShowAlert(legend,reporttype)
     {     
-        document.getElementById("<%= patComp.ClientID %>").value = a;
+        document.getElementById("<%= patComp.ClientID %>").value = legend;
+        document.getElementById("<%= reporttype.ClientID %>").value = reporttype;
         __doPostBack("lblPc");
     }
 </script>
@@ -169,6 +177,7 @@
     <form id="form1" runat="server">
          <div>
             <div class="fullwidth">
+                <asp:HiddenField ID="reporttype" runat ="server" />
                 <asp:HiddenField ID="patComp" runat ="server" />
                 <asp:LinkButton ID="lblPc" runat="server" OnClick="lblPc_Click"></asp:LinkButton>
                 <div class="patient_Continuum_Shapshot_title">
@@ -302,10 +311,11 @@
         </Columns>
     </asp:GridView>
 </div>
-              <div id="dialogPatient" style="display: none">
-            <asp:GridView ID="grdPatients" runat="server" AutoGenerateColumns="false" AllowPaging="true" PageSize="15" >
+     
+       <div id="dialogPatient" style="display: none;"  >
+       <asp:GridView ID="grdPatients" Width="100%" runat="server" AutoGenerateColumns="false" AllowPaging="true" PageSize="15"  OnPageIndexChanging="grdPatients_PageIndexChanging" >
         <Columns>
-            <asp:BoundField DataField="Patient" HeaderText="Patient Name" ItemStyle-Width="180" />
+            <asp:BoundField DataField="Patient" HeaderText="Patient Name" ItemStyle-Width="280" />
              <asp:BoundField DataField="DOB" HeaderText="DOB" ItemStyle-Width="80" />
              <asp:BoundField DataField="testnum" HeaderText="Test Counts" ItemStyle-Width="80" />
              <asp:BoundField DataField="TestDate" HeaderText="Test Date" ItemStyle-Width="80" DataFormatString="{0:MM/dd/yyyy}" />

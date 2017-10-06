@@ -93,8 +93,27 @@ namespace FHOL
         private void BindPatientCompliance()
         {
             string userId = ReturnUserID(DbConnection, "Nisha"); 
-           DataTable dt =  ReturnPatientCompliance_DataTable(DbConnection, Convert.ToInt16(userId));
-           grdPatients.DataSource = dt;
+           DataTable dt = new DataTable();
+            if (reporttype.Value == "0")
+            dt = ReturnPatientCompliance_DataTable(DbConnection, Convert.ToInt16(userId));
+            else if (reporttype.Value == "1")
+             dt = ReturnPatientCompliance_DataTable(DbConnection, 0);
+
+             DataRow[] results = null;
+             DataTable dtresutls = new DataTable();
+             dtresutls = dt.Clone();
+             if (patComp.Value == " <8 ")
+                 results = dt.Select("testnum < 8");
+             else if (patComp.Value == " >=8 ")
+                 results = dt.Select("testnum >= 8");
+             else
+                 dtresutls = dt;           
+
+            foreach(DataRow row in results)
+            {
+                dtresutls.Rows.Add(row.ItemArray);
+            }
+           grdPatients.DataSource = dtresutls;
            grdPatients.DataBind();
         }
 
@@ -139,7 +158,7 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
                                             Formatter = "function() { return ''+ this.percentage +' %'; }"
                                         },
                                     //   Events = new PlotOptionsPieEvents { Click = "function(event) { ShowAlert("+lblopenalert.ClientID+",this.name); }" },
-                                        Point = new PlotOptionsPiePoint { Events = new PlotOptionsPiePointEvents { LegendItemClick = "function(event) { event.preventDefault();  ShowAlert(this.name); }" }
+                                        Point = new PlotOptionsPiePoint { Events = new PlotOptionsPiePointEvents { LegendItemClick = "function(event) { event.preventDefault();  ShowAlert(this.name,0); }" }
                                         }, 
 
 
@@ -185,7 +204,7 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
             DotNet.Highcharts.Highcharts chartt = new DotNet.Highcharts.Highcharts("chartt")
             .SetTitle(new Title { Text = "" })
             .SetCredits(new Credits { Enabled = false })
-            
+
      .SetTooltip(new Tooltip { Formatter = "function() { return '<b>Counts = </b>'+ this.point.yvalue + '<br/> <b>% = </b>' +this.percentage +' %'; }" })
                 .SetPlotOptions(new PlotOptions
                 {
@@ -193,13 +212,15 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
                     {
                         AllowPointSelect = true,
                         Cursor = Cursors.Pointer,
-                      
+
                         DataLabels = new PlotOptionsPieDataLabels
                         {
                             Color = ColorTranslator.FromHtml("#000000"),
                             ConnectorColor = ColorTranslator.FromHtml("#000000"),
                             Formatter = "function() { return ''+ this.percentage +' %'; }"
                         },
+                        Point = new PlotOptionsPiePoint { Events = new PlotOptionsPiePointEvents { LegendItemClick = "function(event) { event.preventDefault();  ShowAlert(this.name,1); }" } },
+
                         ShowInLegend = true
                     }
                 })
@@ -395,6 +416,15 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
             BindPatientCompliance();
             ClientScript.RegisterStartupScript(this.GetType(), "Popup", "ShowPopupPatient();", true);
         }
+
+        protected void grdPatients_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            grdPatients.PageIndex = e.NewPageIndex;
+            BindPatientCompliance();
+            ClientScript.RegisterStartupScript(this.GetType(), "Popup", "ShowPopupPatient();", true);
+        }
+
+       
 
     }
 }
