@@ -271,6 +271,17 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
                 Data = new Data(categoryData.ToArray())
             });
 
+            pChart.SetPlotOptions(new PlotOptions
+            {
+                Line = new PlotOptionsLine
+                {
+                    DataLabels = new PlotOptionsLineDataLabels
+                    {
+                        Enabled = true
+                    }
+                }
+            });
+
             ActivePatientsChart.Text = pChart.ToHtmlString();
 
         }
@@ -367,17 +378,28 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
             {
                 new Series {
                     Type = ChartTypes.Line,
-                    Name = "Rx",
+                    Name = "Active",
                     Data = new Data(pCount.ToArray())
                 },
                 new Series
                 {
                     Type = ChartTypes.Line,
-                    Name = "Active",
+                    Name = "Rx",
                     Data = new Data(testCount.ToArray())
                 }
             });
-            
+
+            eChart.SetPlotOptions(new PlotOptions
+            {
+                Line = new PlotOptionsLine
+                {
+                    DataLabels = new PlotOptionsLineDataLabels
+                    {
+                        Enabled = true
+                    }
+                }
+            });
+
 
             RxTrendActivatedPatient.Text = eChart.ToHtmlString();
         }
