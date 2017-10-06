@@ -14,6 +14,9 @@ using DotNet.Highcharts.Options;
 using DotNet.Highcharts.Enums;
 using System.Drawing;
 using System.Globalization;
+using System.Data.SqlClient;
+using System.Configuration;
+using System.Web.Services;
 
 namespace FHOL
 {
@@ -160,8 +163,6 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
                                     //   Events = new PlotOptionsPieEvents { Click = "function(event) { ShowAlert("+lblopenalert.ClientID+",this.name); }" },
                                         Point = new PlotOptionsPiePoint { Events = new PlotOptionsPiePointEvents { LegendItemClick = "function(event) { event.preventDefault();  ShowAlert(this.name,0); }" }
                                         }, 
-
-
                                         ShowInLegend = true
                                     }
                                    
@@ -446,6 +447,49 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
             ClientScript.RegisterStartupScript(this.GetType(), "Popup", "ShowPopupPatient();", true);
         }
 
+        //public class Customer
+        //{
+        //    public string userId { get; set; }
+        //    //public string ContactName { get; set; }
+        //    //public string City { get; set; }
+        //    //public string Country { get; set; }
+        //    //public string PostalCode { get; set; }
+        //    //public string Phone { get; set; }
+        //    //public string Fax { get; set; }
+        //}
+
+        //[WebMethod]
+        //public static List<Customer> GetCustomers(string username)
+        //{
+        //    string constr = ConfigurationManager.ConnectionStrings["DBEmbeddedIndiaConnection"].ConnectionString;
+        //    using (SqlConnection con = new SqlConnection(constr))
+        //    {
+        //        using (SqlCommand cmd = new SqlCommand("SELECT UserID from _User where UserName ='" + username + "'"))
+        //        {
+        //            cmd.Connection = con;
+        //            List<Customer> customers = new List<Customer>();
+        //            con.Open();
+        //            using (SqlDataReader sdr = cmd.ExecuteReader())
+        //            {
+        //                while (sdr.Read())
+        //                {
+        //                    customers.Add(new Customer
+        //                    {
+        //                        userId = sdr["UserID"].ToString(),
+        //                        //ContactName = sdr["ContactName"].ToString(),
+        //                        //City = sdr["City"].ToString(),
+        //                        //Country = sdr["Country"].ToString(),
+        //                        //PostalCode = sdr["PostalCode"].ToString(),
+        //                        //Phone = sdr["Phone"].ToString(),
+        //                        //Fax = sdr["Fax"].ToString(),
+        //                    });
+        //                }
+        //            }
+        //            con.Close();
+        //            return customers;
+        //        }
+        //    }
+        //}
        
 
     }

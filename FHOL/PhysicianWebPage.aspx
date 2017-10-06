@@ -172,6 +172,31 @@
         __doPostBack("lblPc");
     }
 </script>
+   <%-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $.ajax({
+                type: "POST",
+                url: "PhysicianWebPage.aspx/GetCustomers",
+                data: JSON.stringify({ username: 'DemoECP' }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: OnSuccess,
+                failure: function (response) {
+                    alert(response.d);
+                },
+                error: function (response) {
+                    alert(response.d);
+                }
+            });
+        });
+
+        function OnSuccess(response) {            
+            var customers = response.d;
+            alert("success");
+            console.log(customers);
+        }
+</script>--%>
 </head>
 <body>
     <form id="form1" runat="server">
