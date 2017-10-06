@@ -129,6 +129,7 @@
     <script src="Js/jquery-ui.js"></script>
     <link href="Css/jquery-ui.css" rel="stylesheet" />  
     <script src="Js/highcharts.src.js"></script>    
+    <script src="Js/customFunctions.js"></script>    
 <script type="text/javascript">
   
     function ShowPopup() {

@@ -279,8 +279,22 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
                     {
                         Enabled = true
                     }
+                },
+                Series = new PlotOptionsSeries
+                {
+                    LineWidth = 1,
+                    Point = new PlotOptionsSeriesPoint
+                    {
+                        Events = new PlotOptionsSeriesPointEvents
+                        {
+                            Click = "handleActivePatientsClick"
+                        }
+                    }
                 }
-            });
+             });
+
+            pChart.SetCredits(new Credits { Enabled = false });
+            pChart.SetTitle(new Title { Text = "" });
 
             ActivePatientsChart.Text = pChart.ToHtmlString();
 
@@ -289,40 +303,38 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
         private void RenderEnrolledPatientStatus(SqlConnection dbConn)
         {
 
-            string query = "SELECT status.Name, COUNT(1) as pCount FROM _Patient as patient JOIN _PatientStatusType as status ON patient.PatientStatusID = status.PatientStatusID WHERE DATEPART(YEAR, patient.OperationDate) = 2017 GROUP BY status.Name";
-            dbConn.Open();
-
+            string query = "sp_getDataForEnrolledStatusChart";
             SqlCommand cmd = new SqlCommand(query, dbConn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            dbConn.Open();
+            cmd.ExecuteNonQuery();
 
             DataTable dt = new DataTable();
             dt.Load(cmd.ExecuteReader());
 
             dbConn.Close();
-
-            string[] categories = new string[dt.Rows.Count];
+            
             var categoryData = new List<object[]>();
-            int counter = 0;
+            int allCount = 0;
+
+            List<PieSeriesData> pieData = new List<PieSeriesData>();
 
             foreach (DataRow row in dt.Rows)
             {
-                //TextBox1.Text = row["ImagePath"].ToString();
-                categories[counter] = row["Name"].ToString();
-                categoryData.Add(new object[] { row["pCount"] });
-
-                counter++;
+                allCount = Convert.ToInt32(row["allCount"]);
+                pieData.Add(new PieSeriesData { Name = "BaseLine Progress", Y = Convert.ToInt32(row["bpCount"]),  Color = ColorTranslator.FromHtml("#04658f") });
+                pieData.Add(new PieSeriesData { Name = "Never Tested", Y = Convert.ToInt32(row["neverTestedCount"]),  Color = ColorTranslator.FromHtml("#eeaa23") });
+                pieData.Add(new PieSeriesData { Name = "CEBL", Y = Convert.ToInt32(row["isCeblCount"]), Color = ColorTranslator.FromHtml("#f96524") });
+                pieData.Add(new PieSeriesData { Name = "Active Patients", Y = Convert.ToInt32(row["actPCount"]), Color = ColorTranslator.FromHtml("#5ab44a") });
 
             }
 
             Highcharts eChart = new Highcharts("enrolledChart");
-            eChart.SetXAxis(new XAxis
-            {
-                Categories = categories
-            });
 
             eChart.SetSeries(new Series
             {
                 Type = ChartTypes.Pie,
-                Data = new Data(categoryData.ToArray())
+                Data = new Data(pieData.ToArray())
             });
 
             eChart.SetPlotOptions(new PlotOptions
@@ -332,9 +344,13 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
                     DataLabels = new PlotOptionsPieDataLabels
                     {
                         Formatter = "function() { return ''+ this.y; }"
-                    }
+                    },
+                    ShowInLegend = true
                 }
             });
+
+            eChart.SetCredits(new Credits { Enabled = false });
+            eChart.SetTitle(new Title { Text = "" });
 
             EnrolledPatientStatusChart.Text = eChart.ToHtmlString();
         }
@@ -342,10 +358,11 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
         private void RenderRxTrendActivatedChart(SqlConnection dbConn)
         {
 
-            string query = "SELECT DATEPART(MONTH, patient.OperationDate) as month , COUNT(1) as pCount, SUM(patient.PatientID)/ 100000 as testCount FROM _Patient as patient JOIN _PatientStatusType as status ON patient.PatientStatusID = status.PatientStatusID where patient.PatientStatusID = 1 and DATEPART(YEAR, patient.OperationDate) = 2017 GROUP BY DATEPART(MONTH, patient.OperationDate) ORDER BY DATEPART(MONTH, patient.OperationDate)";
-            dbConn.Open();
-
+            string query = "sp_getDataForRxAndNewActivated";
             SqlCommand cmd = new SqlCommand(query, dbConn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            dbConn.Open();
+            cmd.ExecuteNonQuery();
 
             DataTable dt = new DataTable();
             dt.Load(cmd.ExecuteReader());
@@ -360,9 +377,9 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
             foreach (DataRow row in dt.Rows)
             {
                 //TextBox1.Text = row["ImagePath"].ToString();
-                categories[counter] = GetMonthNameByNumber(Convert.ToInt32(row["month"].ToString()));
+                categories[counter] = GetMonthNameByNumber(Convert.ToInt32(row["Month"].ToString()));
                 pCount.Add(new object[] { row["pCount"] });
-                testCount.Add(new object[] { row["testCount"] });
+                testCount.Add(new object[] { row["newAct"] });
 
                 counter++;
 
@@ -397,8 +414,22 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
                     {
                         Enabled = true
                     }
+                },
+                Series = new PlotOptionsSeries
+                {
+                    LineWidth = 1,
+                    Point = new PlotOptionsSeriesPoint
+                    {
+                        Events = new PlotOptionsSeriesPointEvents
+                        {
+                            Click = "handleRxTrendActivePatientsClick"
+                        }
+                    }
                 }
             });
+
+            eChart.SetCredits(new Credits { Enabled = false });
+            eChart.SetTitle(new Title { Text = "" });
 
 
             RxTrendActivatedPatient.Text = eChart.ToHtmlString();
