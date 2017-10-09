@@ -26,20 +26,71 @@ namespace FHOL
         public static string getEnrolledPatientStatusData()
         {
             PhysicianDashBoard phd = new PhysicianDashBoard();
-            DataTable data =  phd.getQueryDataForChart();
+            DataTable data =  phd.getQueryDataForChart("enrolledStatus", true);
 
             string jsonString = string.Empty;
             jsonString = JsonConvert.SerializeObject(data);
-            return jsonString;
+
+            return jsonString.ToString();
         }
 
-        public DataTable getQueryDataForChart()
+        [WebMethod]
+        public static string getRxTrendAndActivatedData()
+        {
+            PhysicianDashBoard phd = new PhysicianDashBoard();
+            DataTable data = phd.getQueryDataForChart("rxTrendActivated", true);
+
+            string jsonString = string.Empty;
+            jsonString = JsonConvert.SerializeObject(data);
+
+            return jsonString.ToString();
+        }
+
+        [WebMethod]
+        public static string getActivePatientsData()
+        {
+            PhysicianDashBoard phd = new PhysicianDashBoard();
+            DataTable data = phd.getQueryDataForChart("activePatients", false);
+
+            string jsonString = string.Empty;
+            jsonString = JsonConvert.SerializeObject(data);
+
+            return jsonString.ToString();
+        }
+
+        public DataTable getQueryDataForChart(string chartName, bool isProcedure)
         {
             strcon = ConfigurationManager.ConnectionStrings["DBEmbeddedIndiaConnection"].ConnectionString;
-            string query = "sp_getDataForEnrolledStatusChart";
+            string query = string.Empty;
+
+            // prepare the query for the chart
+            switch (chartName)
+            {
+                case "enrolledStatus":
+                    query = "sp_getDataForEnrolledStatusChart";
+                    break;
+
+                case "activePatients":
+                    query = "SELECT DATEPART(MONTH, patient.OperationDate) as month , COUNT(1) as pCount FROM _Patient as patient JOIN _PatientStatusType as status ON patient.PatientStatusID = status.PatientStatusID where patient.PatientStatusID = 1 and DATEPART(YEAR, patient.OperationDate) = 2017 GROUP BY DATEPART(MONTH, patient.OperationDate) ORDER BY DATEPART(MONTH, patient.OperationDate)";
+                    break;
+
+                case "rxTrendActivated":
+                    query = "sp_getDataForRxAndNewActivated";
+                    break;
+
+                default:
+                    break;
+            }
+
+            // create connection and get the data
             DbConnection = new SqlConnection(strcon);
             SqlCommand cmd = new SqlCommand(query, DbConnection);
-            cmd.CommandType = CommandType.StoredProcedure;
+
+            if(isProcedure)
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+            }
+
             DbConnection.Open();
             cmd.ExecuteNonQuery();
 

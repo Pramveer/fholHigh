@@ -9,16 +9,15 @@
     <script type="text/javascript" src="Js/jquery-ui.js" ></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 
-    <script type="text/javascript" src="https://code.highcharts.com/highcharts.js"></script>
-    <script type="text/javascript" src="https://code.highcharts.com/highcharts.src.js"></script>
-    <script type="text/javascript" src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script type="text/javascript" src="Js/highcharts.src.js"></script>
 
     <script type="text/javascript" src="Js/customFunctions.js" ></script>
+
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
     <link rel="stylesheet" href="Css/physicianDashboard.css" />
 </head>
 <body>
-    <div class="container" style="max-width: 95%;">
+    <div class="physicianDashboardContainer">
 
          <!-- Physician Dashboard Header -->
         <div class="physicianDashboardHeader">
@@ -31,19 +30,19 @@
             <!-- prescribed count section -->
             <div class="col-md-2 physicianDash-CountPill">
                 <div class="col-md-6 pillCountLabel">Prescribed</div>
-                <div class="col-md-6 pillCountValue prescribedValue">186</div>
+                <div class="col-md-6 pillCountValue prescribedValue">0</div>
             </div>
 
             <!-- Enrolled count section -->
             <div class="col-md-2 physicianDash-CountPill">
                 <div class="col-md-6 pillCountLabel">Enrolled</div>
-                <div class="col-md-6 pillCountValue enrolledValue">102</div>
+                <div class="col-md-6 pillCountValue enrolledValue">0</div>
             </div>
 
             <!-- Activated count section -->
             <div class="col-md-2 physicianDash-CountPill">
                 <div class="col-md-6 pillCountLabel">Activated</div>
-                <div class="col-md-6 pillCountValue activatedValue">58</div>
+                <div class="col-md-6 pillCountValue activatedValue">0</div>
             </div>
 
             <!-- Open Alerts count section -->
@@ -60,30 +59,35 @@
             <!-- Rx trend and new Active Chart -->
             <div class="col-lg-7 chartContainer">
                 <div class="chartTitle">Rx Trend and Activated Patients by Months</div>
+                <div class="loadingSection" id="rxTrendAndActivatedChart-Loading">Loading...</div>
                 <div class="chartArea" id="rxTrendAndActivatedChart"></div>
             </div>
 
             <!-- Rx trend and new Active Chart -->
             <div class="col-lg-5 chartContainer">
                 <div class="chartTitle">Enrolled Patients Status</div>
+                <div class="loadingSection" id="enrolledPatientsChart-Loading">Loading...</div>
                 <div class="chartArea" id="enrolledPatientsChart"></div>
             </div>
 
              <!-- Rx trend and new Active Chart -->
             <div class="col-lg-4 chartContainer">
                 <div class="chartTitle">Active Patients</div>
+                <div class="loadingSection" id="activePatientsChart-Loading">Loading...</div>
                 <div class="chartArea" id="activePatientsChart"></div>
             </div>
 
             <!-- Rx trend and new Active Chart -->
             <div class="col-lg-4 chartContainer">
                 <div class="chartTitle">Patient Compliance (Last 30 days)</div>
+                <div class="loadingSection" id="patientComplianceChart-Loading">Loading...</div>
                 <div class="chartArea" id="patientComplianceChart"></div>
             </div>
 
             <!-- Rx trend and new Active Chart -->
             <div class="col-lg-4 chartContainer">
                 <div class="chartTitle">Comparative Baseline Compliance (Last 30 days)</div>
+                <div class="loadingSection" id="comparitiveBaselineChart-Loading">Loading...</div>
                 <div class="chartArea" id="comparitiveBaselineChart"></div>
             </div>
 

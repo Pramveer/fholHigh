@@ -1,8 +1,12 @@
-﻿.physicianDashboardHeader {
+﻿.physicianDashboardContainer {
     background: #f4f4f4;
+    padding: 3px;
+    float: left;
+}
+
+.physicianDashboardHeader {
     float: left;
     width: 100%;
-    padding: 3px;
 }
 
 .pillCountLabel {
@@ -42,4 +46,30 @@
 .chartTitle {
     color: #04658f;
     font-weight: bold;
+    text-align: center;
+}
+
+.chartArea {
+    border: 2px solid #cec9c9;
+    text-align: center;
+    min-height: 400px;
+    background: #fff;
+    display: none;
+}
+
+.chartContainer {
+    min-height: 400px;
+    margin-top: 20px;
+}
+
+.loadingSection {
+    text-align: center;
+    float: left;
+    min-height: 400px;
+    width: 100%;
+    background: #fff;
+    color: blue;
+    font-weight: bold;
+    padding-top: 30%;
+    font-size: 20px;
 }
