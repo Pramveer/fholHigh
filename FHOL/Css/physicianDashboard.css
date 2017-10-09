@@ -73,6 +73,7 @@
 .chartContainer {
     min-height: 400px;
     margin-top: 20px;
+    padding: 0px 3px;
 }
 
 .loadingSection {

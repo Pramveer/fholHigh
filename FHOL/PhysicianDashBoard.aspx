@@ -12,9 +12,16 @@
     <script type="text/javascript" src="Js/highcharts.src.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
+
+    <!-- Date Range Picker (http://www.daterangepicker.com/) --> 
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+    
     <script type="text/javascript" src="Js/customFunctions.js" ></script>
 
-    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
     <link rel="stylesheet" href="Css/jquery-ui.css" />  
     <link rel="stylesheet" href="Css/physicianDashboard.css" />
 </head>
@@ -27,7 +34,7 @@
             <!-- Time Filter -->
             <div class="col-md-4 timeFilter">
                 Time Duration
-                <input type="text" class="dateRangeField" value="01/01/2017 - 10/09/2017" />
+                <input type="text" name="physician_datePicker" class="dateRangeField" value="01/01/2017 - 10/09/2017" />
 
             </div>
             

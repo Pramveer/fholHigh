@@ -6,23 +6,62 @@
  */
 
 $(document).ready(function () {
+    initDatePicker();
+
+    bindApplyEventForDateRange();
+
     // remove the credits from the highcharts.
     if (Highcharts) {
         Highcharts.defaultOptions.credits.enabled = false;
     }
 
-    let minDate = new Date('01/01/2017'), maxDate = new Date();
+    let dateRange = $('input[name="physician_datePicker"]').val();
+    dateRange = dateRange.split(' ');
+
+    let minDate = dateRange[0], maxDate = dateRange[2];
 
     let params = {
         minDate: minDate,
         maxDate: maxDate
     };
        
+    getChartsData(params);
+
+});
+
+let initDatePicker = () => {
+    let start = new Date('01/01/2013');
+    let end = new Date();
+
+    //initilise date picker
+    $('input[name="physician_datePicker"]').daterangepicker({
+        startDate: start,
+        endDate: end,
+        ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last 3 Month': [moment().subtract(3, 'month').startOf('month'), moment().subtract(3, 'month').endOf('month')]
+
+        }
+    });
+};
+
+let bindApplyEventForDateRange = () => {
+    $('input[name="physician_datePicker"]').on('apply.daterangepicker', function (ev, picker) {
+        console.log(picker.startDate.format('YYYY-MM-DD'));
+        console.log(picker.endDate.format('YYYY-MM-DD'));
+    });
+};
+
+
+let getChartsData = (params) => {
     getEnrolledPatientStatusData(params);
     getRxTrendAndActivatedData(params);
     getActivePatientsData(params);
-
-});
+};
 
 // ajax call to get the enrolled patients data
 let getEnrolledPatientStatusData = (params) => {
