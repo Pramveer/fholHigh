@@ -10,10 +10,12 @@
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 
     <script type="text/javascript" src="Js/highcharts.src.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
     <script type="text/javascript" src="Js/customFunctions.js" ></script>
 
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="Css/jquery-ui.css" />  
     <link rel="stylesheet" href="Css/physicianDashboard.css" />
 </head>
 <body>
@@ -25,6 +27,7 @@
             <!-- Time Filter -->
             <div class="col-md-4 timeFilter">
                 Time Duration
+                <input type="text" class="dateRangeField" value="01/01/2017 - 10/09/2017" />
 
             </div>
             
@@ -92,6 +95,16 @@
                 <div class="chartArea" id="comparitiveBaselineChart"></div>
             </div>
 
+        </div>
+
+        <!-- Popup Section -->
+        <div id="patientListDialog" class="patientListDialog">
+            <div class="col-md-12 patientsListHeader">
+                <div class="col-md-4">Patient ID</div>
+                <div class="col-md-4">Name</div>
+                <div class="col-md-4">DOB</div>
+            </div>
+            <div class="patientListContent"></div>
         </div>
     </div>
 </body>

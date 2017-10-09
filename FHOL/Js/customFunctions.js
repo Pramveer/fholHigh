@@ -61,6 +61,21 @@ let getRxTrendAndActivatedData = () => {
     });
 };
 
+// ajax call to get the patient list data
+let getPatientsList = (options) => {
+    
+    $.ajax({
+        type: "POST",
+        url: "PhysicianDashBoard.aspx/getPatientsListData",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            // chartLoadComplete('rxTrendAndActivatedChart');
+            renderPatientListOnPopup(response);
+        }
+    });
+}
+
 
 
 // function to render the enrolled status chart
@@ -69,7 +84,7 @@ let renderEnrolledStatusChart = (dataObj) => {
 
     dataObj = JSON.parse(dataObj.d);
     dataObj = dataObj[0];
-    let allCount = dataObj.allCount;
+    let allCount = 0;
 
     let chartData = [];
 
@@ -78,6 +93,8 @@ let renderEnrolledStatusChart = (dataObj) => {
             let obj = {};
             obj.name = getRefinedKeyNames(keys);
             obj.y = dataObj[keys];
+
+            allCount += dataObj[keys];
 
             chartData.push(obj);
         }
@@ -165,7 +182,18 @@ let renderActivePatientsChart = (dataObj) => {
                 dataLabels: {
                     enabled: true
                 }
+            },
+            series: {
+                cursor: 'pointer',
+                point: {
+                    events: {
+                        click: function () {
+                            handleActivePatsChartClick(this);
+                        }
+                    }
+                }
             }
+
         },
         series: [
             {
@@ -221,6 +249,16 @@ let renderRxTrendAndActivatedChart = (dataObj) => {
                 dataLabels: {
                     enabled: true
                 }
+            },
+            series: {
+                cursor: 'pointer',
+                point: {
+                    events: {
+                        click: function () {
+                            handleRxAndActivePatsChartClick(this);
+                        }
+                    }
+                }
             }
         },
         series: [
@@ -265,3 +303,60 @@ let chartLoadComplete = (chartId) => {
     $('#' + chartId + '-Loading').hide();
     $('#' + chartId).show();
 };
+
+// function to handle the click on the active patients chart
+let handleActivePatsChartClick = (pointObj) => {
+    getPatientsList();
+};
+
+// function to handle the click on the rx & active patients chart
+let handleRxAndActivePatsChartClick = (pointObj) => {
+    getPatientsList();
+};
+
+// function to append values to popup
+let renderPatientListOnPopup = (dataList) => {
+    let html = ``;
+
+    dataList = JSON.parse(dataList.d);
+
+    for (let i = 0; i < dataList.length; i++) {
+        let currPat = dataList[i];
+
+        html += `<div class="col-md-12 patientListRow">
+                <div class="col-md-4">${currPat.PatientID}</div>
+                <div class="col-md-4">${getPatientName(currPat.FirstName, currPat.LastName)}</div>
+                <div class="col-md-4">${getFormattedDate(currPat.DateOfBirth)}</div>
+                </div>`;
+    }
+
+    showPopup('Patient Details', html);
+};
+
+// function to open popup 
+let showPopup = (title, htmlText) => {
+    $(".patientListContent").html(htmlText);
+
+    $("#patientListDialog").dialog({
+        title: title,
+        width: 650,
+        buttons: {
+            Ok: function () {
+                $(this).dialog('close');
+            }
+        },
+        modal: true
+    });
+};
+
+// function to get patient name
+let getPatientName = (fName, lName) => {
+    return fName + ' ' + lName;
+};
+
+// function to get formatted date
+let getFormattedDate = (date) => {
+    date = new Date(date);
+
+    return date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear();
+}

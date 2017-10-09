@@ -58,6 +58,18 @@ namespace FHOL
             return jsonString.ToString();
         }
 
+        [WebMethod]
+        public static string getPatientsListData()
+        {
+            PhysicianDashBoard phd = new PhysicianDashBoard();
+            DataTable data = phd.getQueryDataForChart("patientList", false);
+
+            string jsonString = string.Empty;
+            jsonString = JsonConvert.SerializeObject(data);
+
+            return jsonString.ToString();
+        }
+
         public DataTable getQueryDataForChart(string chartName, bool isProcedure)
         {
             strcon = ConfigurationManager.ConnectionStrings["DBEmbeddedIndiaConnection"].ConnectionString;
@@ -76,6 +88,10 @@ namespace FHOL
 
                 case "rxTrendActivated":
                     query = "sp_getDataForRxAndNewActivated";
+                    break;
+
+                case "patientList":
+                    query = "SELECT TOP 100 p.PatientID , p.DateOfBirth, u.FirstName, u.LastName, u.MiddleName  FROM [EmbeddedIndia].[dbo].[_Patient] p  join ._User u on u.UserID = p.UserID   AND u.CRMID IS NOT NULL   AND DATEPART(YEAR,p.OperationDate) = 2017  and p.Active = 1;";
                     break;
 
                 default:
@@ -103,4 +119,5 @@ namespace FHOL
 
         }
     }
+
 }
