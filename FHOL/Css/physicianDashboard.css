@@ -1,0 +1,45 @@
+﻿.physicianDashboardHeader {
+    background: #f4f4f4;
+    float: left;
+    width: 100%;
+    padding: 3px;
+}
+
+.pillCountLabel {
+    background: #fff;
+    border-radius: 2px;
+    font-weight: bold;
+}
+
+.pillCountValue {
+    color: #fff;
+    border-radius: 2px;
+    width: 25%;
+    text-align: center;
+    padding: 0px;
+}
+
+.prescribedValue {
+    background: #eca92f;
+}
+
+.enrolledValue {
+    background: #ed6a24;
+}
+
+.activatedValue {
+    background: #06648f;
+}
+
+.openAlertsValue {
+    background: #59b550;
+}
+
+.physicianDash-ChartSection {
+    float: left;
+}
+
+.chartTitle {
+    color: #04658f;
+    font-weight: bold;
+}
