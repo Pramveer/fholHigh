@@ -24,7 +24,8 @@
             
             <!-- Time Filter -->
             <div class="col-md-4 timeFilter">
-                Time Filter
+                Time Duration
+
             </div>
             
             <!-- prescribed count section -->

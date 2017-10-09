@@ -17,7 +17,6 @@ $(document).ready(function () {
 
 });
 
-
 // ajax call to get the enrolled patients data
 let getEnrolledPatientStatusData = () => {
     $.ajax({
@@ -45,7 +44,7 @@ let getActivePatientsData = () => {
             renderActivePatientsChart(response);
         }
     });
-}
+};
 
 
 // ajax call for rx Trend and Activated  data
@@ -60,7 +59,7 @@ let getRxTrendAndActivatedData = () => {
             renderRxTrendAndActivatedChart(response);
         }
     });
-}
+};
 
 
 
@@ -75,7 +74,7 @@ let renderEnrolledStatusChart = (dataObj) => {
     let chartData = [];
 
     for (let keys in dataObj) {
-        if (keys != 'allCount') {
+        if (keys !== 'allCount') {
             let obj = {};
             obj.name = getRefinedKeyNames(keys);
             obj.y = dataObj[keys];
@@ -97,7 +96,7 @@ let renderEnrolledStatusChart = (dataObj) => {
                 cursor: 'pointer',
                 dataLabels: {
                     enabled: true,
-                    format: '{point.percentage:.1f} %',
+                    format: '{point.percentage:.1f} %'
                 },
                 showInLegend: true
             }
@@ -118,7 +117,7 @@ let renderEnrolledStatusChart = (dataObj) => {
             "bpCount": "BaseLine Progress",
             "neverTestedCount": "Never Tested",
             "isCeblCount": "CEBL",
-            "actPCount": "Active Patients",
+            "actPCount": "Active Patients"
         };
 
         return keysData[keyName];
@@ -195,7 +194,7 @@ let renderRxTrendAndActivatedChart = (dataObj) => {
         let currMonth = getMonthName(currObj.Month).name;
 
         categories.push(currMonth);
-        rxData.push({ name: currMonth, y: currObj.pCount});
+        rxData.push({ name: currMonth, y: currObj.pCount });
         activeData.push({ name: currMonth, y: currObj.newAct });
 
         rxtotal += currObj.pCount;
@@ -238,7 +237,7 @@ let renderRxTrendAndActivatedChart = (dataObj) => {
     });
 
     $('.prescribedValue').html(rxtotal);
-}
+};
 
 
 // function to get the MonthName From Month Id
@@ -259,10 +258,10 @@ let getMonthName = (monthId) => {
     ];
 
     return monthsArray[monthId - 1];
-}
+};
 
 // function to toggle the loading for the dataloading of chart
 let chartLoadComplete = (chartId) => {
     $('#' + chartId + '-Loading').hide();
     $('#' + chartId).show();
-}
+};
