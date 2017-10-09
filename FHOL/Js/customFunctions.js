@@ -10,18 +10,26 @@ $(document).ready(function () {
     if (Highcharts) {
         Highcharts.defaultOptions.credits.enabled = false;
     }
+
+    let minDate = new Date('01/01/2017'), maxDate = new Date();
+
+    let params = {
+        minDate: minDate,
+        maxDate: maxDate
+    };
        
-    getEnrolledPatientStatusData();
-    getRxTrendAndActivatedData();
-    getActivePatientsData();
+    getEnrolledPatientStatusData(params);
+    getRxTrendAndActivatedData(params);
+    getActivePatientsData(params);
 
 });
 
 // ajax call to get the enrolled patients data
-let getEnrolledPatientStatusData = () => {
+let getEnrolledPatientStatusData = (params) => {
     $.ajax({
         type: "POST",
         url: "PhysicianDashBoard.aspx/getEnrolledPatientStatusData",
+        // data: JSON.stringify({ data1: params }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {

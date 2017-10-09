@@ -9,6 +9,8 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Data;
 using Newtonsoft.Json;
+using System.Web.Script.Services;
+using System.Web.Script.Serialization;
 
 namespace FHOL
 {
@@ -25,11 +27,12 @@ namespace FHOL
         [WebMethod]
         public static string getEnrolledPatientStatusData()
         {
+
             PhysicianDashBoard phd = new PhysicianDashBoard();
-            DataTable data =  phd.getQueryDataForChart("enrolledStatus", true);
+            DataTable dTable =  phd.getQueryDataForChart("enrolledStatus", true);
 
             string jsonString = string.Empty;
-            jsonString = JsonConvert.SerializeObject(data);
+            jsonString = JsonConvert.SerializeObject(dTable);
 
             return jsonString.ToString();
         }
