@@ -101,10 +101,45 @@ namespace FHOL
         }
 
         [WebMethod]
-        public static string getPatientComplianceDrillDown(string userID,string pointtype)
+        public static string getPatientComplianceDrillDown(string userID, string pointtype)
         {
             PhysicianDashBoard phd = new PhysicianDashBoard();
             DataTable data = phd.getQueryDataForChart("patientComplianceChart", true, userID);
+            DataRow[] results = null;
+            if (pointtype == "<8")
+                results = data.Select("testnum < 8");
+            else if (pointtype == ">=8")
+                results = data.Select("testnum >= 8");
+            DataTable dt = data.Clone();
+            foreach (DataRow row in results)
+            {
+                dt.ImportRow(row);
+            }
+
+            string jsonString = string.Empty;
+            jsonString = JsonConvert.SerializeObject(dt);
+
+            return jsonString.ToString();
+        }
+
+
+        [WebMethod]
+        public static string getProviderAlerts(string userID)
+        {
+            PhysicianDashBoard phd = new PhysicianDashBoard();
+            DataTable data = phd.getQueryDataForChart("openAlertsValue", false, userID);
+
+            string jsonString = string.Empty;
+            jsonString = JsonConvert.SerializeObject(data.Rows.Count);
+
+            return jsonString.ToString();
+        }
+
+        [WebMethod]
+        public static string getProviderAlertsDrillDown(string userID)
+        {
+            PhysicianDashBoard phd = new PhysicianDashBoard();
+            DataTable data = phd.getQueryDataForChart("openAlertsValue", false, userID);
 
             string jsonString = string.Empty;
             jsonString = JsonConvert.SerializeObject(data);
@@ -140,13 +175,23 @@ namespace FHOL
         }
 
         [WebMethod]
-        public static string getPatientComplianceComparativeDrillDown()
+        public static string getPatientComplianceComparativeDrillDown(string pointtype)
         {
             PhysicianDashBoard phd = new PhysicianDashBoard();
             DataTable data = phd.getQueryDataForChart("patientComplianceChart", true, string.Empty);
+            DataRow[] results = null;
+            if (pointtype == "<8")
+                results = data.Select("testnum < 8");
+            else if (pointtype == ">=8")
+                results = data.Select("testnum >= 8");
+            DataTable dt = data.Clone();
+            foreach (DataRow row in results)
+            {
+                dt.ImportRow(row);
+            }
 
             string jsonString = string.Empty;
-            jsonString = JsonConvert.SerializeObject(data);
+            jsonString = JsonConvert.SerializeObject(dt);
 
             return jsonString.ToString();
         }
@@ -174,6 +219,10 @@ namespace FHOL
 
                 case "patientList":
                     query = "SELECT TOP 100 p.PatientID , p.DateOfBirth, u.FirstName, u.LastName, u.MiddleName  FROM [EmbeddedIndia].[dbo].[_Patient] p  join ._User u on u.UserID = p.UserID   AND u.CRMID IS NOT NULL   AND DATEPART(YEAR,p.OperationDate) = 2017  and p.Active = 1;";
+                    break;
+
+                case "openAlertsValue":
+                    query = "select * from ProviderDashboard_OpenAlert where PrescribingECPID = " + userID;
                     break;
 
                 case "patientComplianceChart":

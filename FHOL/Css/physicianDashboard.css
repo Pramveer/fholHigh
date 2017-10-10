@@ -9,6 +9,20 @@
     width: 100%;
     padding-top: 10px;
 }
+.infoicon{
+    font-size: 18px;
+    color: blue;
+    float: right;
+    position: relative;
+    top: 3px;
+}
+.popover-content {
+    font-weight:normal;
+}
+
+button.ui-dialog-titlebar-close {
+    visibility: hidden;
+}
 
 .dateRangeField {
     text-align: center;

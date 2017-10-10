@@ -8,6 +8,7 @@
 let userIDGlobal = null;
 
 $(document).ready(function () {
+    $('[data-toggle="popover"]').popover();   
     initDatePicker();
 
     bindApplyEventForDateRange();
@@ -63,9 +64,10 @@ let bindApplyEventForDateRange = () => {
 let getChartsData = (params) => {
     getEnrolledPatientStatusData(params);
     getRxTrendAndActivatedData(params);
-    getActivePatientsData(params);
+    getActivePatientsData(params); 
     getPatientCompliance(params);
     getPatientComplianceComparative();
+    getProviderAlerts(params);
 };
 
 // ajax call to get the enrolled patients data
@@ -401,6 +403,24 @@ let showPopup = (title, htmlText) => {
     });
 };
 
+
+// function to open popup 
+let showAlertPopup = (title, htmlText) => {
+    $("#patientAlertListContent").html(htmlText);
+
+    $("#patientAlertListDialog").dialog({
+        title: title,
+        width: 650,
+        buttons: {
+            Ok: function () {
+                $(this).dialog('close');
+            }
+        },
+        modal: true
+    });
+};
+
+
 // function to open popup 
 let showCompliancePopup = (title, htmlText) => {
     $("#patientComplianceListContent").html(htmlText);
@@ -430,7 +450,7 @@ let getFormattedDate = (date) => {
 }
 
 
-// ajax call to get the enrolled patients data
+// ajax call to get the patient compliance
 let getPatientCompliance = (data) => {
     $.ajax({
         type: "POST",
@@ -444,6 +464,49 @@ let getPatientCompliance = (data) => {
         }
     });
 };
+
+// ajax call to get the patient compliance
+let getProviderAlerts = (data) => {
+    $.ajax({
+        type: "POST",
+        url: "PhysicianDashBoard.aspx/getProviderAlerts",
+        data: JSON.stringify({ userID: data.userID }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            //  console.log(response.d);
+            $(".openAlertsValue").html(response.d);
+        }
+    });
+};
+
+let ShowOpenAlerts = () => {
+    $.ajax({
+        type: "POST",
+        url: "PhysicianDashBoard.aspx/getProviderAlertsDrillDown",
+        data: JSON.stringify({ userID: userIDGlobal }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+           let html = ``;
+
+            dataList = JSON.parse(response.d);
+
+            for (let i = 0; i < dataList.length; i++) {
+                let currPat = dataList[i];
+
+                html += `<div class="col-md-12 patientListRow">               
+                <div class="col-md-3">${getPatientName(currPat.FirstName, currPat.LastName)}</div>
+                <div class="col-md-3">${currPat.DOB}</div>
+                <div class="col-md-3">${currPat.StudyName}</div>
+                <div class="col-md-3">${getFormattedDate(currPat.AlertDate)}</div>
+                </div>`;
+            }
+            //console.log(html);
+            showAlertPopup('Patient Details', html); 
+        }
+    });
+} 
 
 // ajax call to get the enrolled patients data
 let getPatientComplianceComparative = () => {
@@ -486,10 +549,13 @@ let renderPatientCompliance = (dataObj) => {
               text: ''
           },
           tooltip: {
-             /* formatter: function () {
-                  return 'The value for <b>' point.name </b> is <b>' + this.point.yValue + '</b>, in series ' + this.series.name;
-              } */
-              pointFormat: '{point.name}: <b>{point.yValue}</b>'
+              formatter: function () {
+                  if (this.point.name =="<8") 
+                      return 'Patient counts with <b> &lt;8 </b> tests: <b>' + this.point.yValue + '</b>';
+                  else 
+                      return 'Patient counts with <b> >=8 </b> tests: <b>' + this.point.yValue + '</b>';
+              }  
+            //  pointFormat: '{point.name}: <b>{point.yValue}</b>'
              
           },
           plotOptions: {
@@ -551,11 +617,12 @@ let renderPatientComplianceComparative = (dataObj) => {
             text: ''
         },
         tooltip: {
-            /* formatter: function () {
-                 return 'The value for <b>' point.name </b> is <b>' + this.point.yValue + '</b>, in series ' + this.series.name;
-             } */
-            pointFormat: '{point.name}: <b>{point.yValue}</b>'
-
+            formatter: function () {
+                if (this.point.name == "<8")
+                    return 'Patient counts with <b> &lt;8 </b> tests: <b>' + this.point.yValue + '</b>';
+                else
+                    return 'Patient counts with <b> >=8 </b> tests: <b>' + this.point.yValue + '</b>';
+            }
         },
         plotOptions: {
             pie: {
@@ -605,12 +672,12 @@ let bindPatientCompliance = (dataUserId,pointoption) => {
 
                 html += `<div class="col-md-12 patientListRow">
                 <div class="col-md-4">${currPat.Patient}</div>
-                <div class="col-md-4">${currPat.DOB}</div>
-                <div class="col-md-4">${currPat.testnum}</div>
-                <div class="col-md-4">${currPat.TestDate}</div>
+                <div class="col-md-3">${currPat.DOB}</div>
+                <div class="col-md-2">${currPat.testnum}</div>
+                <div class="col-md-3">${currPat.TestDate}</div>
                 </div>`;
             }
-            console.log(html);
+           // console.log(html);
             showCompliancePopup('Patient Details', html);
         }
     });
@@ -622,6 +689,7 @@ let bindPatientComplianceComparative = (pointoption) => {
     $.ajax({
         type: "POST",
         url: "PhysicianDashBoard.aspx/getPatientComplianceComparativeDrillDown",
+        data: JSON.stringify({ pointtype: pointoption }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
@@ -634,12 +702,12 @@ let bindPatientComplianceComparative = (pointoption) => {
 
                 html += `<div class="col-md-12 patientListRow">
                 <div class="col-md-4">${currPat.Patient}</div>
-                <div class="col-md-4">${currPat.DOB}</div>
-                <div class="col-md-4">${currPat.testnum}</div>
-                <div class="col-md-4">${currPat.TestDate}</div>
+                <div class="col-md-3">${currPat.DOB}</div>
+                <div class="col-md-2">${currPat.testnum}</div>
+                <div class="col-md-3">${currPat.TestDate}</div>
                 </div>`;
             }
-            console.log(html);
+            //console.log(html);
             showCompliancePopup('Patient Details', html);
         }
     });

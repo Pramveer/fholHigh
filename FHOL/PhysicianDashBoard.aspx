@@ -27,7 +27,7 @@
   
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/excite-bike/jquery-ui.css" />  
     <link rel="stylesheet" href="Css/physicianDashboard.css" />
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 </head>
 <body>
     <div class="physicianDashboardContainer">
@@ -62,8 +62,8 @@
 
             <!-- Open Alerts count section -->
             <div class="col-md-2 physicianDash-CountPill">
-                <div class="col-md-6 pillCountLabel">Open Alerts</div>
-                <div class="col-md-6 pillCountValue openAlertsValue">5</div>
+                <div class="col-md-8 pillCountLabel">Open Alerts</div>
+                <div onclick="ShowOpenAlerts();" class="col-md-6 pillCountValue openAlertsValue" style="cursor:pointer"> </div>
             </div>
 
         </div>
@@ -94,14 +94,17 @@
 
             <!-- Rx trend and new Active Chart -->
             <div class="col-lg-4 chartContainer">
-                <div class="chartTitle">Patient Compliance (Last 30 days)</div>
+                  
+         
+                <div class="chartTitle">Patient Compliance (Last 30 days) <a href="#" class="infoicon" title="Patient Compliance" data-toggle="popover" data-trigger="hover" data-content="This shows the rate of Patients who did >=8 test and <8 for last 30 days for the logged in Physician"  data-placement="left"> <i class="fa fa-info-circle"></i></a>  </div>
                 <div class="loadingSection" id="patientComplianceChart-Loading">Loading...</div>
                 <div class="chartArea" id="patientComplianceChart"></div>
             </div>
 
             <!-- Rx trend and new Active Chart -->
-            <div class="col-lg-4 chartContainer">
-                <div class="chartTitle">Comparative Baseline Compliance (Last 30 days)</div>
+           <div class="col-lg-4 chartContainer">                
+                <div class="chartTitle">Comparative Baseline Compliance (Last 30 days) <a href="#" class="infoicon" title="Comparative Baseline Complaince" data-toggle="popover" data-trigger="hover" data-content="This shows the rate of Patients who did >=8 and <8 for the last 30 days"  data-placement="left"> <i class="fa fa-info-circle"></i></a>  
+         </div>
                 <div class="loadingSection" id="comparitiveBaselineChart-Loading">Loading...</div>
                 <div class="chartArea" id="comparitiveBaselineChart"></div>
             </div>
@@ -118,15 +121,26 @@
             <div class="patientListContent"></div>
         </div>
 
-         <!-- Popup Section -->
+         <!-- Popup Section Patient Compliance-->
         <div id="patientComplianceListDialog" class="patientListDialog">
             <div class="col-md-12 patientsListHeader">
                 <div class="col-md-4">Patient</div>
-                <div class="col-md-4">DOB</div>
-                <div class="col-md-4">Test Counts</div>
-                <div class="col-md-4">Last Test Date</div>
+                <div class="col-md-3">DOB</div>
+                <div class="col-md-2">Counts</div>
+                <div class="col-md-3">Last Test Date</div>
             </div>
-            <div class="patientComplianceListContent"></div>
+            <div id="patientComplianceListContent" class="patientListContent"></div>
+        </div>
+
+        <!-- Popup Section Patient Compliance-->
+        <div id="patientAlertListDialog" class="patientListDialog">
+            <div class="col-md-12 patientsListHeader">
+                <div class="col-md-3">Patient</div>
+                <div class="col-md-3">DOB</div>
+                <div class="col-md-3">Study</div>
+                <div class="col-md-3">Alert Date</div>
+            </div>
+            <div id="patientAlertListContent" class="patientListContent"></div>
         </div>
 
     </div>
