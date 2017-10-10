@@ -5,6 +5,8 @@
  * @desc: file for the custom javascript functions
  */
 
+let userIDGlobal = null;
+
 $(document).ready(function () {
     initDatePicker();
 
@@ -22,9 +24,10 @@ $(document).ready(function () {
 
     let params = {
         minDate: minDate,
-        maxDate: maxDate
+        maxDate: maxDate,
+        userID: "4222"
     };
-       
+    userIDGlobal = params.userID;   
     getChartsData(params);
 
 });
@@ -61,7 +64,7 @@ let getChartsData = (params) => {
     getEnrolledPatientStatusData(params);
     getRxTrendAndActivatedData(params);
     getActivePatientsData(params);
-    getPatientCompliance();
+    getPatientCompliance(params);
     getPatientComplianceComparative();
 };
 
@@ -428,10 +431,11 @@ let getFormattedDate = (date) => {
 
 
 // ajax call to get the enrolled patients data
-let getPatientCompliance = () => {
+let getPatientCompliance = (data) => {
     $.ajax({
         type: "POST",
         url: "PhysicianDashBoard.aspx/getPatientCompliance",
+        data: JSON.stringify({ userID: data.userID }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
@@ -503,7 +507,7 @@ let renderPatientCompliance = (dataObj) => {
                   point: {
                       events: {
                           click: function (e) {
-                              bindPatientCompliance(this.name);
+                              bindPatientCompliance(userIDGlobal,this.name);
                           }
                       }
                   }
@@ -584,10 +588,11 @@ let renderPatientComplianceComparative = (dataObj) => {
 
 };
 
-let bindPatientCompliance = (pointoption) => {
+let bindPatientCompliance = (dataUserId,pointoption) => {
     $.ajax({
         type: "POST",
         url: "PhysicianDashBoard.aspx/getPatientComplianceDrillDown",
+        data: JSON.stringify({ userID: dataUserId, pointtype: pointoption  }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {

@@ -31,7 +31,7 @@
 </head>
 <body>
     <div class="physicianDashboardContainer">
-        <asp:HiddenField ID="txtUser" runat="server" />
+       
          <!-- Physician Dashboard Header -->
         <div class="physicianDashboardHeader">
             
