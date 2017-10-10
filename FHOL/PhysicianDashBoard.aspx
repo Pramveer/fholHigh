@@ -16,6 +16,7 @@
     <script src="Js/daterangepicker.js"></script>
     <link href="Css/daterangepicker.css" rel="stylesheet" />   
     <script type="text/javascript" src="Js/customFunctions.js" ></script>  
+    <script type="text/javascript" src="Js/underscore.js" ></script>  
     <link href="Css/jquery-ui.css" rel="stylesheet" />    
     <link rel="stylesheet" href="Css/physicianDashboard.css" />
   <%--  <link rel="stylesheet" href="Css/font-awesome.min.css" />--%>
@@ -66,21 +67,42 @@
             
             <!-- Rx trend and new Active Chart -->
             <div class="col-lg-7 chartContainer">
-                <div class="chartTitle">Rx Trend and Activated Patients by Months</div>
+                <div class="chartTitle">Rx Trend and Activated Patients by Months
+                    <a href="#" class="infoicon" title="Rx Trend and Activated Patients by Months" 
+                        data-toggle="popover" data-trigger="hover" 
+                        data-content="This chart shows the Rx Trend and the Active Patients distributed by Months."  
+                        data-placement="left"> 
+                        <i class="fa fa-info-circle"></i>
+                    </a>  
+                </div>
                 <div class="loadingSection" id="rxTrendAndActivatedChart-Loading">Loading...</div>
                 <div class="chartArea" id="rxTrendAndActivatedChart"></div>
             </div>
 
             <!-- Rx trend and new Active Chart -->
             <div class="col-lg-5 chartContainer">
-                <div class="chartTitle">Enrolled Patients Status</div>
+                <div class="chartTitle">Enrolled Patients Status
+                    <a href="#" class="infoicon" title="Enrolled Patients Status" 
+                        data-toggle="popover" data-trigger="hover" 
+                        data-content="This chart shows the Enrolled Patients Status"  
+                        data-placement="left"> 
+                        <i class="fa fa-info-circle"></i>
+                    </a>  
+                </div>
                 <div class="loadingSection" id="enrolledPatientsChart-Loading">Loading...</div>
                 <div class="chartArea" id="enrolledPatientsChart"></div>
             </div>
 
              <!-- Rx trend and new Active Chart -->
             <div class="col-lg-4 chartContainer">
-                <div class="chartTitle">Active Patients</div>
+                <div class="chartTitle">Active Patients
+                    <a href="#" class="infoicon" title="Active Patients" 
+                        data-toggle="popover" data-trigger="hover" 
+                        data-content="This shows the cumulative count for the active patients for every month "  
+                        data-placement="left"> 
+                        <i class="fa fa-info-circle"></i>
+                    </a>  
+                </div>
                 <div class="loadingSection" id="activePatientsChart-Loading">Loading...</div>
                 <div class="chartArea" id="activePatientsChart"></div>
             </div>

@@ -44,6 +44,8 @@ button.ui-dialog-titlebar-close {
     width: 25%;
     text-align: center;
     padding: 0px;
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .prescribedValue {
@@ -111,6 +113,14 @@ button.ui-dialog-titlebar-close {
     max-height: 350px;
     overflow-y: auto;
     background: #fff;
+    width: 100%;
+    text-align: center;
+}
+
+.noPatientsFound , .noDataFoundForChart {
+    margin: 20px 0px;
+    color: red;
+    font-weight: bold;
 }
 
 .patientsListHeader {

@@ -66,7 +66,7 @@ namespace FHOL
         public static string getPatientsListData()
         {
             PhysicianDashBoard phd = new PhysicianDashBoard();
-            DataTable data = phd.getQueryDataForChart("patientList", true, string.Empty, false);
+            DataTable data = phd.getQueryDataForChart("patientList", false, string.Empty, false);
 
             string jsonString = string.Empty;
             jsonString = JsonConvert.SerializeObject(data);
@@ -311,11 +311,153 @@ namespace FHOL
 
         }
 
-        public string prepareSqlQueryForPatients()
+
+        [WebMethod]
+        public static string getPatientListForEnrolledChart(string dataParams)
+        {
+            string userID = string.Empty;
+            string pointName = string.Empty;
+            DateTime minDate = new DateTime();
+            DateTime maxDate = new DateTime();
+            string preparedQuery = string.Empty;
+
+            string[] paramArray = Regex.Split(dataParams, "##");
+            userID = paramArray[0];
+            minDate = Convert.ToDateTime(paramArray[1]);
+            maxDate = Convert.ToDateTime(paramArray[2]);
+            pointName = paramArray[3];
+            
+            PhysicianDashBoard phd = new PhysicianDashBoard();
+
+            preparedQuery = phd.getBasicQueryForPatientsList(userID, minDate, maxDate);
+
+            if(pointName == "Never Tested")
+            {
+                preparedQuery += " AND Datedeviceshipped is not null and Devicetransmittingdate is null and BaselineEstDate is null";
+            }
+            else if(pointName == "Baseline Progress")
+            {
+                preparedQuery += " AND Datedeviceshipped is not null  and Devicetransmittingdate is not null and BaselineEstDate is null";
+            }
+            else if (pointName == "Active Patients")
+            {
+                preparedQuery += " AND BaselineEstDate is not null";
+            }
+            else if(pointName == "CEBL")
+            {
+                preparedQuery += " AND PatientStatusID = 6";
+            }
+
+            DataTable data = phd.getPatientsListForCharts(preparedQuery);
+
+            string jsonString = string.Empty;
+            jsonString = JsonConvert.SerializeObject(data);
+
+            return jsonString.ToString();
+        }
+
+        [WebMethod]
+        public static string getPatientListForRxAndActive(string dataParams)
+        {
+            string userID = string.Empty;
+            string seriesName = string.Empty;
+            string monthId = string.Empty;
+            DateTime minDate = new DateTime();
+            DateTime maxDate = new DateTime();
+            string preparedQuery = string.Empty;
+
+            string[] paramArray = Regex.Split(dataParams, "##");
+            userID = paramArray[0];
+            minDate = Convert.ToDateTime(paramArray[1]);
+            maxDate = Convert.ToDateTime(paramArray[2]);
+            seriesName = paramArray[3];
+            monthId = paramArray[4];
+
+            PhysicianDashBoard phd = new PhysicianDashBoard();
+
+            preparedQuery = phd.getBasicQueryForPatientsList(userID, minDate, maxDate);
+
+            if (seriesName == "Active")
+            {
+                preparedQuery += " AND BaselineEstDate is not null and  PatientStatusID = 1  and (LeftEye in ('IDTF', 'Production')  or RightEye in ('IDTF', 'Production') )";
+            }
+            else
+            {
+                preparedQuery += " ";
+            }
+
+            if(monthId != "NA")
+            {
+                preparedQuery += " AND DATEPART(MONTH, CreatedOn) = " + monthId;
+            }
+
+            DataTable data = phd.getPatientsListForCharts(preparedQuery);
+
+            string jsonString = string.Empty;
+            jsonString = JsonConvert.SerializeObject(data);
+
+            return jsonString.ToString();
+        }
+        
+        [WebMethod]
+        public static string getPatientListForCummilative(string dataParams)
+        {
+            string userID = string.Empty;
+            string monthId = string.Empty;
+            DateTime minDate = new DateTime();
+            DateTime maxDate = new DateTime();
+            string preparedQuery = string.Empty;
+
+            string[] paramArray = Regex.Split(dataParams, "##");
+            userID = paramArray[0];
+            minDate = Convert.ToDateTime(paramArray[1]);
+            maxDate = Convert.ToDateTime(paramArray[2]);
+            monthId = paramArray[3];
+
+            PhysicianDashBoard phd = new PhysicianDashBoard();
+
+            preparedQuery = phd.getBasicQueryForPatientsList(userID, minDate, maxDate);
+
+            if (monthId != "NA")
+            {
+                preparedQuery += " AND DATEPART(MONTH, CreatedOn) = " + monthId;
+            }
+
+            DataTable data = phd.getPatientsListForCharts(preparedQuery);
+
+            string jsonString = string.Empty;
+            jsonString = JsonConvert.SerializeObject(data);
+
+            return jsonString.ToString();
+
+        }
+
+        DataTable getPatientsListForCharts(string query)
+        {
+            strcon = ConfigurationManager.ConnectionStrings["DBEmbeddedIndiaConnection"].ConnectionString;
+
+            DbConnection = new SqlConnection(strcon);
+            SqlCommand cmd = new SqlCommand(query, DbConnection);
+            cmd.CommandTimeout = 0;
+
+            DbConnection.Open();
+            cmd.ExecuteNonQuery();
+
+            DataTable dtable = new DataTable();
+            dtable.Load(cmd.ExecuteReader());
+
+            DbConnection.Close();
+
+            return dtable;
+        }
+
+        string getBasicQueryForPatientsList(string userID, DateTime minDate, DateTime maxDate)
         {
             string query = "";
 
-           
+            query = "SELECT PatientID , DateOfBirth, FirstName, LastName FROM ContactBase WHERE Active = 1 AND PrescribingECPID = " + userID;
+            query += " AND CreatedOn BETWEEN '" + minDate + "' AND '" + maxDate + "'";
+
             return query;
         }
     }

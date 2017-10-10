@@ -13,6 +13,8 @@ $(document).ready(function () {
 
     bindApplyEventForDateRange();
 
+    bindPillClickEvent();
+
     // remove the credits from the highcharts.
     if (Highcharts) {
         Highcharts.defaultOptions.credits.enabled = false;
@@ -26,13 +28,14 @@ $(document).ready(function () {
     let params = {
         minDate: minDate,
         maxDate: maxDate,
-        userID: "4222"
+        userID: "68" // "4222"
     };
     userIDGlobal = params.userID;   
     getChartsData(params);
 
 });
 
+// initialize the date picker 
 let initDatePicker = () => {
     let start = new Date('01/01/2017');
     let end = new Date();
@@ -53,11 +56,9 @@ let initDatePicker = () => {
     });
 };
 
+// bind the apply btn click of date range picker
 let bindApplyEventForDateRange = () => {
     $('input[name="physician_datePicker"]').on('apply.daterangepicker', function (ev, picker) {
-        alert('date changed');
-        console.log(picker.startDate.format('YYYY-MM-DD'));
-        console.log(picker.endDate.format('YYYY-MM-DD'));
 
         let params = {
             minDate: picker.startDate.format('YYYY-MM-DD'),
@@ -69,7 +70,22 @@ let bindApplyEventForDateRange = () => {
     });
 };
 
+// bind click event for the pills count
+let bindPillClickEvent = () => {
+    $('.prescribedValue').on('click', function () {
+        handleRxAndActiveChartClick(null, true);
+    });
 
+    $('.enrolledValue').on('click', function () {
+        handleEnrolledChartClick(null, true);
+    });
+
+    $('.activatedValue').on('click', function () {
+        handleCummilativeChartClick(null, true);
+    });
+};
+
+// function to get charts data
 let getChartsData = (params) => {
     getEnrolledPatientStatusData(params);
     getRxTrendAndActivatedData(params);
@@ -79,6 +95,7 @@ let getChartsData = (params) => {
     getProviderAlerts(params);
 };
 
+// function to render the charts after date change
 let changeChartDataAfterDateChange = (params) => {
     getEnrolledPatientStatusData(params);
     getRxTrendAndActivatedData(params);
@@ -101,7 +118,6 @@ let getEnrolledPatientStatusData = (params) => {
         }
     });
 };
-
 
 // ajax call to get the active patients data
 let getActivePatientsData = (params) => {
@@ -138,7 +154,7 @@ let getRxTrendAndActivatedData = (params) => {
 };
 
 // ajax call to get the patient list data
-let getPatientsList = (options) => {
+let getPatientsList = (options, chartName) => {
 
     $.ajax({
         type: "POST",
@@ -152,8 +168,10 @@ let getPatientsList = (options) => {
     });
 };
 
+
+// function to prepare the param obj for charts
 let prepareParamForChart = (paramObj) => {
-    return paramObj.userID + "##" + paramObj.minDate + "##" + paramObj.maxDate;;
+    return paramObj.userID + "##" + paramObj.minDate + "##" + paramObj.maxDate;
 };
 
 // function to render the enrolled status chart
@@ -200,7 +218,7 @@ let renderEnrolledStatusChart = (dataObj) => {
                 cursor: 'pointer',
                 events: {
                     click: function (event) {
-                        console.log(event);
+                        handleEnrolledChartClick(event.point);
                     }
                 }
             }
@@ -272,8 +290,8 @@ let renderActivePatientsChart = (dataObj) => {
                 cursor: 'pointer',
                 point: {
                     events: {
-                        click: function () {
-                            handleActivePatsChartClick(this);
+                        click: function (event) {
+                            handleCummilativeChartClick(event.point);
                         }
                     }
                 }
@@ -339,8 +357,8 @@ let renderRxTrendAndActivatedChart = (dataObj) => {
                 cursor: 'pointer',
                 point: {
                     events: {
-                        click: function () {
-                            handleRxAndActivePatsChartClick(this);
+                        click: function (event) {
+                            handleRxAndActiveChartClick(event.point);
                         }
                     }
                 }
@@ -363,8 +381,97 @@ let renderRxTrendAndActivatedChart = (dataObj) => {
 };
 
 
+// function to handle the chart click for the enrolled status chart
+let handleEnrolledChartClick = (pointObj, isFromPill) => {
+
+    let paramStr = getbaseFiltersForChartClick();
+
+    if (isFromPill) {
+        paramStr += '##' + "NA";
+    }
+    else {
+        // append point name which is clicked
+        paramStr += '##' + pointObj.options.name;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "PhysicianDashBoard.aspx/getPatientListForEnrolledChart",
+        data: JSON.stringify({ dataParams: paramStr }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            renderPatientListOnPopup(response);
+        }
+    });
+};
+
+// function to handle the chart click for the active and rx trend chart
+let handleRxAndActiveChartClick = (pointObj, isFromPill) => {
+    let paramStr = getbaseFiltersForChartClick();
+
+    if (isFromPill) {
+        paramStr += '##' + "Rx";
+        paramStr += '##' + "NA";
+    }
+    else {
+        // append point name which is clicked
+        paramStr += '##' + pointObj.series.name;
+
+        // append month Id on which is clicked
+        paramStr += '##' + getMonthName(null, pointObj.options.name);
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "PhysicianDashBoard.aspx/getPatientListForRxAndActive",
+        data: JSON.stringify({ dataParams: paramStr }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            renderPatientListOnPopup(response);
+        }
+    });
+};
+
+// function to handle the chart click for the active cummilative cahrt
+let handleCummilativeChartClick = (pointObj, isFromPill) => {
+    let paramStr = getbaseFiltersForChartClick();
+
+    if (isFromPill) {
+        paramStr += '##' + "NA";
+    }
+    else {
+        // append month Id on which is clicked
+        paramStr += '##' + getMonthName(null, pointObj.options.name);
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "PhysicianDashBoard.aspx/getPatientListForCummilative",
+        data: JSON.stringify({ dataParams: paramStr }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            renderPatientListOnPopup(response);
+        }
+    });
+        
+}
+
+// function to get base filters for chart click
+let getbaseFiltersForChartClick = () => {
+    let finalStr = null;
+    let daterrange = $('input[name="physician_datePicker"]').val().split(' ');
+
+    finalStr = userIDGlobal + '##' + daterrange[0] + '##' + daterrange[2];
+
+    return finalStr;
+    
+};
+
 // function to get the MonthName From Month Id
-let getMonthName = (monthId) => {
+let getMonthName = (monthId, monName) => {
     let monthsArray = [
         { id: 1, name: 'Jan', fullName: 'January' },
         { id: 2, name: 'Feb', fullName: 'February' },
@@ -380,7 +487,12 @@ let getMonthName = (monthId) => {
         { id: 12, name: 'Dec', fullName: 'December' }
     ];
 
-    return monthsArray[monthId - 1];
+    if (monName) {
+        return _.where(monthsArray, { name: monName})[0].id;
+    }
+    else {
+        return monthsArray[monthId - 1];
+    }
 };
 
 // function to toggle the loading for the dataloading of chart
@@ -389,15 +501,6 @@ let chartLoadComplete = (chartId) => {
     $('#' + chartId).show();
 };
 
-// function to handle the click on the active patients chart
-let handleActivePatsChartClick = (pointObj) => {
-    getPatientsList();
-};
-
-// function to handle the click on the rx & active patients chart
-let handleRxAndActivePatsChartClick = (pointObj) => {
-    getPatientsList();
-};
 
 // function to append values to popup
 let renderPatientListOnPopup = (dataList) => {
@@ -405,22 +508,27 @@ let renderPatientListOnPopup = (dataList) => {
 
     dataList = JSON.parse(dataList.d);
 
-    for (let i = 0; i < dataList.length; i++) {
-        let currPat = dataList[i];
+    if (dataList.length) {
+        for (let i = 0; i < dataList.length; i++) {
+            let currPat = dataList[i];
 
-        html += `<div class="col-md-12 patientListRow">
+            html += `<div class="col-md-12 patientListRow">
                 <div class="col-md-4">${currPat.PatientID}</div>
                 <div class="col-md-4">${getPatientName(currPat.FirstName, currPat.LastName)}</div>
                 <div class="col-md-4">${getFormattedDate(currPat.DateOfBirth)}</div>
                 </div>`;
+        }
+    }
+    else {
+        html = `<div class="noPatientsFound">No Patients Data Found for Current Selection!</div>`;
     }
 
-    showPopup('Patient Details', html);
+    showPopup('Patient Details (N = ' + dataList.length +')', html);
 };
 
 // function to open popup 
 let showPopup = (title, htmlText) => {
-    $(".#patientListPopupContent").html(htmlText);
+    $("#patientListPopupContent").html(htmlText);
 
     $("#patientListDialog").dialog({
         title: title,
