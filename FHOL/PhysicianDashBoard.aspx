@@ -6,28 +6,20 @@
 <head runat="server">
 
     <title>Physician DashBoard</title>
-    <!-- <script type="text/javascript" src="Js/jquery-1.5.1.min.js" ></script> -->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js" ></script>
-
-    <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" ></script>
-    <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-
+    <script src="Js/jquery-2.2.4.min.js"></script>
+    <script src="Js/jquery-ui.min.js"></script>
+    <script src="Js/bootstrap.min.js"></script>  
     <script type="text/javascript" src="Js/highcharts.src.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-
-    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
-
-    <!-- Date Range Picker (http://www.daterangepicker.com/) --> 
-    <!-- <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1/jquery.min.js"></script> -->
-    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
-    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
-    
-    <script type="text/javascript" src="Js/customFunctions.js" ></script>    
-  
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/excite-bike/jquery-ui.css" />  
+    <script src="Js/exporting.js"></script>
+    <link href="Css/bootstrap.min.css" rel="stylesheet" />    
+    <script src="Js/moment.min.js"></script>
+    <script src="Js/daterangepicker.js"></script>
+    <link href="Css/daterangepicker.css" rel="stylesheet" />   
+    <script type="text/javascript" src="Js/customFunctions.js" ></script>  
+    <link href="Css/jquery-ui.css" rel="stylesheet" />    
     <link rel="stylesheet" href="Css/physicianDashboard.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link href="Css/font-awesome.min.css" rel="stylesheet" />
+  
 </head>
 <body>
     <div class="physicianDashboardContainer">
