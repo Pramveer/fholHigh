@@ -11,6 +11,7 @@ using System.Data;
 using Newtonsoft.Json;
 using System.Web.Script.Services;
 using System.Web.Script.Serialization;
+using System.Text.RegularExpressions;
 
 namespace FHOL
 {
@@ -25,23 +26,23 @@ namespace FHOL
         }
 
         [WebMethod]
-        public static string getEnrolledPatientStatusData()
+        public static string getEnrolledPatientStatusData(string dataParams)
         {
-
             PhysicianDashBoard phd = new PhysicianDashBoard();
-            DataTable dTable = phd.getQueryDataForChart("enrolledStatus", true,string.Empty);
+            DataTable dTable = phd.getQueryDataForChart("enrolledStatus", true, dataParams, true);
 
             string jsonString = string.Empty;
             jsonString = JsonConvert.SerializeObject(dTable);
 
             return jsonString.ToString();
+
         }
 
         [WebMethod]
-        public static string getRxTrendAndActivatedData()
+        public static string getRxTrendAndActivatedData(string dataParams)
         {
             PhysicianDashBoard phd = new PhysicianDashBoard();
-            DataTable data = phd.getQueryDataForChart("rxTrendActivated", true, string.Empty);
+            DataTable data = phd.getQueryDataForChart("rxTrendActivated", true, dataParams, true);
 
             string jsonString = string.Empty;
             jsonString = JsonConvert.SerializeObject(data);
@@ -50,10 +51,10 @@ namespace FHOL
         }
 
         [WebMethod]
-        public static string getActivePatientsData()
+        public static string getActivePatientsData(string dataParams)
         {
             PhysicianDashBoard phd = new PhysicianDashBoard();
-            DataTable data = phd.getQueryDataForChart("activePatients", false, string.Empty);
+            DataTable data = phd.getQueryDataForChart("activePatients", true, dataParams, true);
 
             string jsonString = string.Empty;
             jsonString = JsonConvert.SerializeObject(data);
@@ -65,7 +66,7 @@ namespace FHOL
         public static string getPatientsListData()
         {
             PhysicianDashBoard phd = new PhysicianDashBoard();
-            DataTable data = phd.getQueryDataForChart("patientList", false, string.Empty);
+            DataTable data = phd.getQueryDataForChart("patientList", true, string.Empty, false);
 
             string jsonString = string.Empty;
             jsonString = JsonConvert.SerializeObject(data);
@@ -77,7 +78,7 @@ namespace FHOL
         public static string getPatientCompliance(string userID)
         {
             PhysicianDashBoard phd = new PhysicianDashBoard();
-            DataTable data = phd.getQueryDataForChart("patientComplianceChart", true, userID);
+            DataTable data = phd.getQueryDataForChart("patientComplianceChart", true, userID, false);
             DataRow[] resultmorethan8 = data.Select("testnum >= 8");
             DataRow[] resultlessthan8 = data.Select("testnum < 8");
             int morethan8 = 0, lessthan8 = 0;
@@ -104,7 +105,7 @@ namespace FHOL
         public static string getPatientComplianceDrillDown(string userID, string pointtype)
         {
             PhysicianDashBoard phd = new PhysicianDashBoard();
-            DataTable data = phd.getQueryDataForChart("patientComplianceChart", true, userID);
+            DataTable data = phd.getQueryDataForChart("patientComplianceChart", true, userID, false);
             DataRow[] results = null;
             if (pointtype == "<8")
                 results = data.Select("testnum < 8");
@@ -127,7 +128,7 @@ namespace FHOL
         public static string getProviderAlerts(string userID)
         {
             PhysicianDashBoard phd = new PhysicianDashBoard();
-            DataTable data = phd.getQueryDataForChart("openAlertsValue", false, userID);
+            DataTable data = phd.getQueryDataForChart("openAlertsValue", false, userID, false);
 
             string jsonString = string.Empty;
             jsonString = JsonConvert.SerializeObject(data.Rows.Count);
@@ -139,7 +140,7 @@ namespace FHOL
         public static string getProviderAlertsDrillDown(string userID)
         {
             PhysicianDashBoard phd = new PhysicianDashBoard();
-            DataTable data = phd.getQueryDataForChart("openAlertsValue", false, userID);
+            DataTable data = phd.getQueryDataForChart("openAlertsValue", false, userID, false);
 
             string jsonString = string.Empty;
             jsonString = JsonConvert.SerializeObject(data);
@@ -151,7 +152,7 @@ namespace FHOL
         public static string getPatientComplianceComparative()
         {
             PhysicianDashBoard phd = new PhysicianDashBoard();
-            DataTable data = phd.getQueryDataForChart("comparitiveBaselineChart", true, string.Empty);
+            DataTable data = phd.getQueryDataForChart("comparitiveBaselineChart", true, string.Empty, false);
             DataRow[] resultmorethan8 = data.Select("testnum >= 8");
             DataRow[] resultlessthan8 = data.Select("testnum < 8");
             int morethan8 = 0, lessthan8 = 0;
@@ -178,7 +179,8 @@ namespace FHOL
         public static string getPatientComplianceComparativeDrillDown(string pointtype)
         {
             PhysicianDashBoard phd = new PhysicianDashBoard();
-            DataTable data = phd.getQueryDataForChart("patientComplianceChart", true, string.Empty);
+
+            DataTable data = phd.getQueryDataForChart("patientComplianceChart", false, string.Empty, false);
             DataRow[] results = null;
             if (pointtype == "<8")
                 results = data.Select("testnum < 8");
@@ -197,10 +199,26 @@ namespace FHOL
         }
 
 
-        public DataTable getQueryDataForChart(string chartName, bool isProcedure,string  userID)
+        public DataTable getQueryDataForChart(string chartName, bool isProcedure, string  paramData, bool isMultipleParams)
         {
             strcon = ConfigurationManager.ConnectionStrings["DBEmbeddedIndiaConnection"].ConnectionString;
             string query = string.Empty;
+
+            string userID = string.Empty;
+            DateTime minDate = new DateTime();
+            DateTime maxDate = new DateTime();
+
+            if (isMultipleParams)
+            {
+                string[] paramArray = Regex.Split(paramData, "##");
+                userID = paramArray[0];
+                minDate = Convert.ToDateTime(paramArray[1]);
+                maxDate = Convert.ToDateTime(paramArray[2]);
+            }
+            else
+            {
+                userID = paramData;
+            }
 
             // prepare the query for the chart
             switch (chartName)
@@ -210,7 +228,7 @@ namespace FHOL
                     break;
 
                 case "activePatients":
-                    query = "SELECT DATEPART(MONTH, patient.OperationDate) as month , COUNT(1) as pCount FROM _Patient as patient JOIN _PatientStatusType as status ON patient.PatientStatusID = status.PatientStatusID where patient.PatientStatusID = 1 and DATEPART(YEAR, patient.OperationDate) = 2017 GROUP BY DATEPART(MONTH, patient.OperationDate) ORDER BY DATEPART(MONTH, patient.OperationDate)";
+                    query = "sp_getDataForCommulativeActivation";
                     break;
 
                 case "rxTrendActivated":
@@ -240,6 +258,7 @@ namespace FHOL
             DbConnection = new SqlConnection(strcon);
             SqlCommand cmd = new SqlCommand(query, DbConnection);
             cmd.CommandTimeout = 0;
+
             if (isProcedure)
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -249,15 +268,21 @@ namespace FHOL
             switch (chartName)
             {
                 case "enrolledStatus":
-                    //   query = "sp_getDataForEnrolledStatusChart";
+                    cmd.Parameters.AddWithValue("@PrescribingECPID", userID);
+                    cmd.Parameters.AddWithValue("@MinDate", minDate);
+                    cmd.Parameters.AddWithValue("@MaxDate", maxDate);
                     break;
 
                 case "activePatients":
-                    //   query = "SELECT DATEPART(MONTH, patient.OperationDate) as month , COUNT(1) as pCount FROM _Patient as patient JOIN _PatientStatusType as status ON patient.PatientStatusID = status.PatientStatusID where patient.PatientStatusID = 1 and DATEPART(YEAR, patient.OperationDate) = 2017 GROUP BY DATEPART(MONTH, patient.OperationDate) ORDER BY DATEPART(MONTH, patient.OperationDate)";
+                    cmd.Parameters.AddWithValue("@PrescribingECPID", userID);
+                    cmd.Parameters.AddWithValue("@MinDate", minDate);
+                    cmd.Parameters.AddWithValue("@MaxDate", maxDate);
                     break;
 
                 case "rxTrendActivated":
-                    //  query = "sp_getDataForRxAndNewActivated";
+                    cmd.Parameters.AddWithValue("@PrescribingECPID", userID);
+                    cmd.Parameters.AddWithValue("@MinDate", minDate);
+                    cmd.Parameters.AddWithValue("@MaxDate", maxDate);
                     break;
 
                 case "patientList":
@@ -284,6 +309,14 @@ namespace FHOL
 
             return dt;
 
+        }
+
+        public string prepareSqlQueryForPatients()
+        {
+            string query = "";
+
+           
+            return query;
         }
     }
 
