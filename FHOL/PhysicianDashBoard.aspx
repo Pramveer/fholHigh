@@ -18,7 +18,8 @@
     <script type="text/javascript" src="Js/customFunctions.js" ></script>  
     <link href="Css/jquery-ui.css" rel="stylesheet" />    
     <link rel="stylesheet" href="Css/physicianDashboard.css" />
-    <link href="Css/font-awesome.min.css" rel="stylesheet" />
+  <%--  <link rel="stylesheet" href="Css/font-awesome.min.css" />--%>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" /> 
   
 </head>
 <body>
