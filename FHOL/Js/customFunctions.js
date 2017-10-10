@@ -140,7 +140,8 @@ let renderEnrolledStatusChart = (dataObj) => {
     for (let keys in dataObj) {
         if (keys !== 'allCount') {
             let obj = {};
-            obj.name = getRefinedKeyNames(keys);
+            // obj.name = getRefinedKeyNames(keys);
+            obj.name = keys;
             obj.y = dataObj[keys];
 
             allCount += dataObj[keys];
@@ -270,7 +271,7 @@ let renderRxTrendAndActivatedChart = (dataObj) => {
         let currMonth = getMonthName(currObj.Month).name;
 
         categories.push(currMonth);
-        rxData.push({ name: currMonth, y: currObj.pCount });
+        rxData.push({ name: currMonth, y: currObj.rxCount });
         activeData.push({ name: currMonth, y: currObj.newAct });
 
         rxtotal += currObj.pCount;
