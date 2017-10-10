@@ -1,9 +1,10 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="PhysicianDashBoard.aspx.cs" Inherits="FHOL.PhysicianDashBoard" %>
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="PhysicianDashBoard.aspx.cs" Inherits="FHOL.PhysicianDashBoard" %>
 
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
+
     <title>Physician DashBoard</title>
     <script type="text/javascript" src="Js/jquery-1.5.1.min.js" ></script>
     <script type="text/javascript" src="Js/jquery-ui.js" ></script>
@@ -20,10 +21,11 @@
     <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
     
-    <script type="text/javascript" src="Js/customFunctions.js" ></script>
-
+    <script type="text/javascript" src="Js/customFunctions.js" ></script>    
+  
     <link rel="stylesheet" href="Css/jquery-ui.css" />  
     <link rel="stylesheet" href="Css/physicianDashboard.css" />
+    
 </head>
 <body>
     <div class="physicianDashboardContainer">
@@ -113,6 +115,18 @@
             </div>
             <div class="patientListContent"></div>
         </div>
+
+         <!-- Popup Section -->
+        <div id="patientComplianceListDialog" class="patientListDialog">
+            <div class="col-md-12 patientsListHeader">
+                <div class="col-md-4">Patient</div>
+                <div class="col-md-4">DOB</div>
+                <div class="col-md-4">Test Counts</div>
+                <div class="col-md-4">Last Test Date</div>
+            </div>
+            <div class="patientComplianceListContent"></div>
+        </div>
+
     </div>
 </body>
 </html>

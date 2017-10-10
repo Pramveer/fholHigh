@@ -140,8 +140,8 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
                                 perlessthan8 = Math.Round(((Double)lessthan8 / (patientcompliance.Rows.Count)) * 100, 2);
 
                             List<PieSeriesData> pieData = new List<PieSeriesData>();
-                            pieData.Add(new PieSeriesData { Name = " >=8 ", Y = permorethan8, yvalue = morethan8, Color = ColorTranslator.FromHtml("#5b9bd5") });
-                            pieData.Add(new PieSeriesData { Name = " <8 ", Y = perlessthan8, yvalue = lessthan8, Color = ColorTranslator.FromHtml("#70ad47") });
+                            pieData.Add(new PieSeriesData { Name = " >=8 ", Y = permorethan8, yvalue = morethan8  });
+                            pieData.Add(new PieSeriesData { Name = " <8 ", Y = perlessthan8, yvalue = lessthan8  });
 
                             DotNet.Highcharts.Highcharts chart = new DotNet.Highcharts.Highcharts("chart")
                             .SetTitle(new Title { Text = "" })
@@ -198,8 +198,8 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
                 perlessthan8 = Math.Round(((Double)lessthan8 / (patientcompliance.Rows.Count)) * 100, 2);
 
             List<PieSeriesData> pieData = new List<PieSeriesData>();
-            pieData.Add(new PieSeriesData { Name = " >=8 ", Y = permorethan8, yvalue = morethan8, Color = ColorTranslator.FromHtml("#5b9bd5") });
-            pieData.Add(new PieSeriesData { Name = " <8 ", Y = perlessthan8, yvalue = lessthan8, Color = ColorTranslator.FromHtml("#70ad47") });
+            pieData.Add(new PieSeriesData { Name = " >=8 ", Y = permorethan8, yvalue = morethan8  });
+            pieData.Add(new PieSeriesData { Name = " <8 ", Y = perlessthan8, yvalue = lessthan8 });
 
 
             DotNet.Highcharts.Highcharts chartt = new DotNet.Highcharts.Highcharts("chartt")
@@ -344,10 +344,10 @@ DataRow[] resultmorethan8 = patientcompliance.Select("testnum >= 8");
             foreach (DataRow row in dt.Rows)
             {
                 allCount = Convert.ToInt32(row["allCount"]);
-                pieData.Add(new PieSeriesData { Name = "BaseLine Progress", Y = Convert.ToInt32(row["bpCount"]),  Color = ColorTranslator.FromHtml("#04658f") });
-                pieData.Add(new PieSeriesData { Name = "Never Tested", Y = Convert.ToInt32(row["neverTestedCount"]),  Color = ColorTranslator.FromHtml("#eeaa23") });
-                pieData.Add(new PieSeriesData { Name = "CEBL", Y = Convert.ToInt32(row["isCeblCount"]), Color = ColorTranslator.FromHtml("#f96524") });
-                pieData.Add(new PieSeriesData { Name = "Active Patients", Y = Convert.ToInt32(row["actPCount"]), Color = ColorTranslator.FromHtml("#5ab44a") });
+                //pieData.Add(new PieSeriesData { Name = "BaseLine Progress", Y = Convert.ToInt32(row["bpCount"]),  Color = ColorTranslator.FromHtml("#04658f") });
+                //pieData.Add(new PieSeriesData { Name = "Never Tested", Y = Convert.ToInt32(row["neverTestedCount"]),  Color = ColorTranslator.FromHtml("#eeaa23") });
+                //pieData.Add(new PieSeriesData { Name = "CEBL", Y = Convert.ToInt32(row["isCeblCount"]), Color = ColorTranslator.FromHtml("#f96524") });
+                //pieData.Add(new PieSeriesData { Name = "Active Patients", Y = Convert.ToInt32(row["actPCount"]), Color = ColorTranslator.FromHtml("#5ab44a") });
 
             }
 
