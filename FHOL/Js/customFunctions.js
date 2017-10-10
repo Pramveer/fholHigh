@@ -62,6 +62,7 @@ let getChartsData = (params) => {
     getRxTrendAndActivatedData(params);
     getActivePatientsData(params);
     getPatientCompliance();
+    getPatientComplianceComparative();
 };
 
 // ajax call to get the enrolled patients data
@@ -439,6 +440,20 @@ let getPatientCompliance = () => {
     });
 };
 
+// ajax call to get the enrolled patients data
+let getPatientComplianceComparative = () => {
+    $.ajax({
+        type: "POST",
+        url: "PhysicianDashBoard.aspx/getPatientComplianceComparative",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            chartLoadComplete('comparitiveBaselineChart');
+            renderPatientComplianceComparative(response);
+        }
+    });
+};
+
 // function to render the enrolled status chart
 let renderPatientCompliance = (dataObj) => {
     let container = "patientComplianceChart";
@@ -503,10 +518,104 @@ let renderPatientCompliance = (dataObj) => {
 
 };
 
+
+// function to render the enrolled status chart
+let renderPatientComplianceComparative = (dataObj) => {
+    let container = "comparitiveBaselineChart";
+    //  console.log(dataObj);
+    dataObj = JSON.parse(dataObj.d);
+    // console.log(dataObj);
+
+    let chartData = [];
+
+    for (let keys in dataObj) {
+
+        let obj = {};
+        obj.name = dataObj[keys].Name.toString();
+        obj.y = dataObj[keys].Y;
+        obj.color = dataObj[keys].Color;
+        obj.yValue = dataObj[keys].yvalue;
+        chartData.push(obj);
+    }
+
+    Highcharts.chart(container, {
+        chart: {
+            type: 'pie'
+        },
+        title: {
+            text: ''
+        },
+        tooltip: {
+            /* formatter: function () {
+                 return 'The value for <b>' point.name </b> is <b>' + this.point.yValue + '</b>, in series ' + this.series.name;
+             } */
+            pointFormat: '{point.name}: <b>{point.yValue}</b>'
+
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.percentage:.1f} %'
+                },
+                showInLegend: true
+            },
+            series: {
+                cursor: 'pointer',
+                point: {
+                    events: {
+                        click: function (e) {
+                            bindPatientComplianceComparative(this.name);
+                        }
+                    }
+                }
+            }
+        },
+        series: [{
+            name: 'Test Counts',
+            data: chartData
+        }]
+    });
+
+    // set the totalCount in the HeaderBar
+
+};
+
 let bindPatientCompliance = (pointoption) => {
     $.ajax({
         type: "POST",
         url: "PhysicianDashBoard.aspx/getPatientComplianceDrillDown",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            let html = ``;
+
+            dataList = JSON.parse(response.d);
+
+            for (let i = 0; i < dataList.length; i++) {
+                let currPat = dataList[i];
+
+                html += `<div class="col-md-12 patientListRow">
+                <div class="col-md-4">${currPat.Patient}</div>
+                <div class="col-md-4">${currPat.DOB}</div>
+                <div class="col-md-4">${currPat.testnum}</div>
+                <div class="col-md-4">${currPat.TestDate}</div>
+                </div>`;
+            }
+            console.log(html);
+            showCompliancePopup('Patient Details', html);
+        }
+    });
+
+}
+
+
+let bindPatientComplianceComparative = (pointoption) => {
+    $.ajax({
+        type: "POST",
+        url: "PhysicianDashBoard.aspx/getPatientComplianceComparativeDrillDown",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
