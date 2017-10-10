@@ -118,7 +118,7 @@
                 <div class="col-md-4">Name</div>
                 <div class="col-md-4">DOB</div>
             </div>
-            <div class="patientListContent"></div>
+            <div id="patientListPopupContent" class="patientListContent"></div>
         </div>
 
          <!-- Popup Section Patient Compliance-->

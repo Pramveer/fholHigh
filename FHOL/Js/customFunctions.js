@@ -34,7 +34,7 @@ $(document).ready(function () {
 });
 
 let initDatePicker = () => {
-    let start = new Date('01/01/2013');
+    let start = new Date('01/01/2017');
     let end = new Date();
 
     //initilise date picker
@@ -55,8 +55,17 @@ let initDatePicker = () => {
 
 let bindApplyEventForDateRange = () => {
     $('input[name="physician_datePicker"]').on('apply.daterangepicker', function (ev, picker) {
+        alert('date changed');
         console.log(picker.startDate.format('YYYY-MM-DD'));
         console.log(picker.endDate.format('YYYY-MM-DD'));
+
+        let params = {
+            minDate: picker.startDate.format('YYYY-MM-DD'),
+            maxDate: picker.endDate.format('YYYY-MM-DD'),
+            userID: userIDGlobal
+        };
+
+        changeChartDataAfterDateChange(params);
     });
 };
 
@@ -70,12 +79,20 @@ let getChartsData = (params) => {
     getProviderAlerts(params);
 };
 
+let changeChartDataAfterDateChange = (params) => {
+    getEnrolledPatientStatusData(params);
+    getRxTrendAndActivatedData(params);
+    getActivePatientsData(params);
+};
+
 // ajax call to get the enrolled patients data
 let getEnrolledPatientStatusData = (params) => {
+    let paramStr = prepareParamForChart(params);
+
     $.ajax({
         type: "POST",
         url: "PhysicianDashBoard.aspx/getEnrolledPatientStatusData",
-        // data: JSON.stringify({ data1: params }),
+        data: JSON.stringify({ dataParams: paramStr }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
@@ -87,10 +104,12 @@ let getEnrolledPatientStatusData = (params) => {
 
 
 // ajax call to get the active patients data
-let getActivePatientsData = () => {
+let getActivePatientsData = (params) => {
+    let paramStr = prepareParamForChart(params);
     $.ajax({
         type: "POST",
         url: "PhysicianDashBoard.aspx/getActivePatientsData",
+        data: JSON.stringify({ dataParams: paramStr }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
@@ -102,10 +121,13 @@ let getActivePatientsData = () => {
 
 
 // ajax call for rx Trend and Activated  data
-let getRxTrendAndActivatedData = () => {
+let getRxTrendAndActivatedData = (params) => {
+    let paramStr = prepareParamForChart(params);
+
     $.ajax({
         type: "POST",
         url: "PhysicianDashBoard.aspx/getRxTrendAndActivatedData",
+        data: JSON.stringify({ dataParams: paramStr }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
@@ -117,7 +139,7 @@ let getRxTrendAndActivatedData = () => {
 
 // ajax call to get the patient list data
 let getPatientsList = (options) => {
-    
+
     $.ajax({
         type: "POST",
         url: "PhysicianDashBoard.aspx/getPatientsListData",
@@ -128,9 +150,11 @@ let getPatientsList = (options) => {
             renderPatientListOnPopup(response);
         }
     });
-}
+};
 
-
+let prepareParamForChart = (paramObj) => {
+    return paramObj.userID + "##" + paramObj.minDate + "##" + paramObj.maxDate;;
+};
 
 // function to render the enrolled status chart
 let renderEnrolledStatusChart = (dataObj) => {
@@ -171,6 +195,14 @@ let renderEnrolledStatusChart = (dataObj) => {
                     format: '{point.percentage:.1f} %'
                 },
                 showInLegend: true
+            },
+            series: {
+                cursor: 'pointer',
+                events: {
+                    click: function (event) {
+                        console.log(event);
+                    }
+                }
             }
         },
         series: [{
@@ -203,16 +235,15 @@ let renderActivePatientsChart = (dataObj) => {
     dataObj = JSON.parse(dataObj.d);
 
     let categories = [], chartData = [];
-    let actCount = 0;
+    let actCount = dataObj[dataObj.length - 1].pCount;
 
     for (let i = 0; i < dataObj.length; i++) {
         let currObj = dataObj[i];
-        let currMonth = getMonthName(currObj.month).name;
+        let currMonth = getMonthName(currObj.MonthNo).name;
 
         categories.push(currMonth);
         chartData.push({ name: currMonth, y: currObj.pCount });
 
-        actCount += currObj.pCount;
     }
 
     // render chart
@@ -279,7 +310,7 @@ let renderRxTrendAndActivatedChart = (dataObj) => {
         rxData.push({ name: currMonth, y: currObj.rxCount });
         activeData.push({ name: currMonth, y: currObj.newAct });
 
-        rxtotal += currObj.pCount;
+        rxtotal += currObj.rxCount;
     }
 
     // render chart
@@ -389,7 +420,7 @@ let renderPatientListOnPopup = (dataList) => {
 
 // function to open popup 
 let showPopup = (title, htmlText) => {
-    $(".patientListContent").html(htmlText);
+    $(".#patientListPopupContent").html(htmlText);
 
     $("#patientListDialog").dialog({
         title: title,
