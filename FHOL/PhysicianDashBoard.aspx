@@ -1,4 +1,4 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="PhysicianDashBoard.aspx.cs" Inherits="FHOL.PhysicianDashBoard" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="PhysicianDashBoard.aspx.cs" Inherits="FHOL.PhysicianDashBoard" %>
 
 <!DOCTYPE html>
 
@@ -24,10 +24,12 @@
   
 </head>
 <body>
-    <div class="physicianDashboardContainer">
+    <form id="physicanForm" runat="server">
+        <div class="physicianDashboardContainer">
        
          <!-- Physician Dashboard Header -->
         <div class="physicianDashboardHeader">
+            <asp:TextBox ID="pramTest" runat="server" />
             
             <!-- Time Filter -->
             <div class="col-md-4 timeFilter">
@@ -159,5 +161,7 @@
         </div>
 
     </div>
+    </form>
 </body>
 </html>
+

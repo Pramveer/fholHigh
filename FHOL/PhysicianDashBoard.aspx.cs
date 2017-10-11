@@ -22,7 +22,7 @@ namespace FHOL
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            pramTest.Text = "Added by Pram for test";
         }
 
         [WebMethod]
@@ -199,7 +199,7 @@ namespace FHOL
         }
 
 
-        public DataTable getQueryDataForChart(string chartName, bool isProcedure, string  paramData, bool isMultipleParams)
+        public DataTable getQueryDataForChart(string chartName, bool isProcedure, string paramData, bool isMultipleParams)
         {
             strcon = ConfigurationManager.ConnectionStrings["DBEmbeddedIndiaConnection"].ConnectionString;
             string query = string.Empty;
@@ -326,16 +326,16 @@ namespace FHOL
             minDate = Convert.ToDateTime(paramArray[1]);
             maxDate = Convert.ToDateTime(paramArray[2]);
             pointName = paramArray[3];
-            
+
             PhysicianDashBoard phd = new PhysicianDashBoard();
 
             preparedQuery = phd.getBasicQueryForPatientsList(userID, minDate, maxDate);
 
-            if(pointName == "Never Tested")
+            if (pointName == "Never Tested")
             {
                 preparedQuery += " AND Datedeviceshipped is not null and Devicetransmittingdate is null and BaselineEstDate is null";
             }
-            else if(pointName == "Baseline Progress")
+            else if (pointName == "Baseline Progress")
             {
                 preparedQuery += " AND Datedeviceshipped is not null  and Devicetransmittingdate is not null and BaselineEstDate is null";
             }
@@ -343,7 +343,7 @@ namespace FHOL
             {
                 preparedQuery += " AND BaselineEstDate is not null";
             }
-            else if(pointName == "CEBL")
+            else if (pointName == "CEBL")
             {
                 preparedQuery += " AND PatientStatusID = 6";
             }
@@ -352,6 +352,7 @@ namespace FHOL
 
             string jsonString = string.Empty;
             jsonString = JsonConvert.SerializeObject(data);
+
 
             return jsonString.ToString();
         }
@@ -386,7 +387,7 @@ namespace FHOL
                 preparedQuery += " ";
             }
 
-            if(monthId != "NA")
+            if (monthId != "NA")
             {
                 preparedQuery += " AND DATEPART(MONTH, CreatedOn) = " + monthId;
             }
@@ -398,7 +399,7 @@ namespace FHOL
 
             return jsonString.ToString();
         }
-        
+
         [WebMethod]
         public static string getPatientListForCummilative(string dataParams)
         {
