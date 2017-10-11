@@ -204,8 +204,7 @@ let renderEnrolledStatusChart = (dataObj) => {
     let allCount = 0;
 
     let chartData = [];
-    console.log("enrolled");
-    console.log(dataObj);
+   
     for (let keys in dataObj) {
         if (keys !== 'allCount') {
             let obj = {};
@@ -681,7 +680,7 @@ let ShowOpenAlerts = () => {
                 </div>`;
             }
             //console.log(html);
-            showAlertPopup('Patient Details', html); 
+            showAlertPopup('Patient Details (N = ' + dataList.length + ')', html); 
         }
     });
 } 
@@ -856,7 +855,7 @@ let bindPatientCompliance = (dataUserId,pointoption) => {
                 </div>`;
             }
            // console.log(html);
-            showCompliancePopup('Patient Details', html);
+            showCompliancePopup('Patient Details (N = ' + dataList.length + ')', html);
         }
     });
 
@@ -886,7 +885,7 @@ let bindPatientComplianceComparative = (pointoption) => {
                 </div>`;
             }
             //console.log(html);
-            showCompliancePopup('Patient Details', html);
+            showCompliancePopup('Patient Details (N = ' + dataList.length + ')', html);
         }
     });
 

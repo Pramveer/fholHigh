@@ -134,5 +134,6 @@ button.ui-dialog-titlebar-close {
     background: #fff;
     padding: 3px 0px;
     border-bottom: 1px solid rgba(33, 145, 192, 0.19);
+    text-align:left;
 }
 
