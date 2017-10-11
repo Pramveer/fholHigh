@@ -204,14 +204,32 @@ let renderEnrolledStatusChart = (dataObj) => {
     let allCount = 0;
 
     let chartData = [];
-
+    console.log("enrolled");
+    console.log(dataObj);
     for (let keys in dataObj) {
         if (keys !== 'allCount') {
             let obj = {};
             // obj.name = getRefinedKeyNames(keys);
             obj.name = keys;
             obj.y = dataObj[keys];
+            
+            switch (keys) {
+                case "Active Patients":
+                    obj.color ="#70ad47";
+                    break;
+                case "Baseline Progress":
+                    obj.color = "#5b9bd5";
+                    break;
+                case "CEBL":
+                    obj.color = "#e96e62";
+                    break;
+                case "Never Tested":
+                    obj.color = "#ffb600";
+                    break;
+                default:
 
+            }
+             
             allCount += dataObj[keys];
 
             chartData.push(obj);
