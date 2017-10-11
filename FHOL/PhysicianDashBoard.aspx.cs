@@ -200,7 +200,7 @@ namespace FHOL
         {
             PhysicianDashBoard phd = new PhysicianDashBoard();
 
-            DataTable data = phd.getQueryDataForChart("patientComplianceChart", false, string.Empty, false);
+            DataTable data = phd.getQueryDataForChart("comparitiveBaselineChart", true, string.Empty, false);
             DataRow[] results = null;
             if (pointtype == "<8")
                 results = data.Select("testnum < 8");
