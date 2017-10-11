@@ -1,4 +1,4 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="PhysicianDashBoard.aspx.cs" Inherits="FHOL.PhysicianDashBoard" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="PhysicianDashBoard.aspx.cs" Inherits="FHOL.PhysicianDashBoard" %>
 
 <!DOCTYPE html>
 
@@ -24,14 +24,15 @@
   
 </head>
 <body>
-    <form runat="server" id="form1">
+ 
+    <form id="physicanForm" runat="server"> 
         <asp:HiddenField ID="UserName" runat="server" />
-
-    </form>
-    <div class="physicianDashboardContainer">
+        <div class="physicianDashboardContainer">
+ 
        
          <!-- Physician Dashboard Header -->
         <div class="physicianDashboardHeader">
+          
             
             <!-- Time Filter -->
             <div class="col-md-4 timeFilter">
@@ -163,5 +164,7 @@
         </div>
 
     </div>
+    </form>
 </body>
 </html>
+

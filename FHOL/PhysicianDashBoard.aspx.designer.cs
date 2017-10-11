@@ -13,13 +13,13 @@ namespace FHOL {
     public partial class PhysicianDashBoard {
         
         /// <summary>
-        /// form1 control.
+        /// physicanForm control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
+        protected global::System.Web.UI.HtmlControls.HtmlForm physicanForm;
         
         /// <summary>
         /// UserName control.
@@ -29,5 +29,14 @@ namespace FHOL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField UserName;
+        
+        /// <summary>
+        /// pramTest control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox pramTest;
     }
 }
