@@ -728,9 +728,9 @@ let renderPatientCompliance = (dataObj) => {
           tooltip: {
               formatter: function () {
                   if (this.point.name =="<8") 
-                      return 'Patient counts with <b> &lt;8 </b> tests: <b>' + this.point.yValue + '</b>';
+                      return '<span style="font-size:10px">&lt;8</span> <br>Patient counts with <b> &lt;8 </b> tests: <b>' + this.point.yValue + '</b>';
                   else 
-                      return 'Patient counts with <b> >=8 </b> tests: <b>' + this.point.yValue + '</b>';
+                      return '<span style="font-size:10px">>=8 </span><br> Patient counts with <b> >=8 </b> tests: <b>' + this.point.yValue + '</b>';
               }  
             //  pointFormat: '{point.name}: <b>{point.yValue}</b>'
              
@@ -796,9 +796,9 @@ let renderPatientComplianceComparative = (dataObj) => {
         tooltip: {
             formatter: function () {
                 if (this.point.name == "<8")
-                    return 'Patient counts with <b> &lt;8 </b> tests: <b>' + this.point.yValue + '</b>';
+                    return '<span style="font-size:10px">&lt;8</span> <br>Patient counts with <b> &lt;8 </b> tests: <b>' + this.point.yValue + '</b>';
                 else
-                    return 'Patient counts with <b> >=8 </b> tests: <b>' + this.point.yValue + '</b>';
+                    return '<span style="font-size:10px">>=8 </span><br> Patient counts with <b> >=8 </b> tests: <b>' + this.point.yValue + '</b>';
             }
         },
         plotOptions: {
