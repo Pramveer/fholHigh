@@ -62,7 +62,7 @@
             <!-- Open Alerts count section -->
             <div class="col-md-2 physicianDash-CountPill">
                 <div class="col-md-8 pillCountLabel">Open Alerts</div>
-                <div onclick="ShowOpenAlerts();" class="col-md-6 pillCountValue openAlertsValue" style="cursor:pointer"> </div>
+                <div onclick="ShowOpenAlerts();" class="col-md-6 pillCountValue openAlertsValue" style="cursor:pointer"> 0</div>
             </div>
 
         </div>

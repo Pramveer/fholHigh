@@ -73,16 +73,32 @@ let bindApplyEventForDateRange = () => {
 
 // bind click event for the pills count
 let bindPillClickEvent = () => {
-    $('.prescribedValue').on('click', function () {
-        handleRxAndActiveChartClick(null, true);
+    $('.prescribedValue').on('click', function (e) {
+        let value = $(e.currentTarget).html();
+        value = parseInt(value);
+
+        if (value) {
+            handleRxAndActiveChartClick(null, true);
+        }
+        
     });
 
-    $('.enrolledValue').on('click', function () {
-        handleEnrolledChartClick(null, true);
+    $('.enrolledValue').on('click', function (e) {
+        let value = $(e.currentTarget).html();
+        value = parseInt(value);
+
+        if (value) {
+            handleEnrolledChartClick(null, true);
+        }
     });
 
-    $('.activatedValue').on('click', function () {
-        handleCummilativeChartClick(null, true);
+    $('.activatedValue').on('click', function (e) {
+        let value = $(e.currentTarget).html();
+        value = parseInt(value);
+
+        if (value) {
+            handleCummilativeChartClick(null, true);
+        }
     });
 };
 
@@ -105,6 +121,7 @@ let changeChartDataAfterDateChange = (params) => {
 
 // ajax call to get the enrolled patients data
 let getEnrolledPatientStatusData = (params) => {
+    chartLoadStart('enrolledPatientsChart');
     let paramStr = prepareParamForChart(params);
 
     $.ajax({
@@ -142,6 +159,7 @@ let getUserName = (user) => {
 
 // ajax call to get the active patients data
 let getActivePatientsData = (params) => {
+    chartLoadStart('activePatientsChart');
     let paramStr = prepareParamForChart(params);
     $.ajax({
         type: "POST",
@@ -159,6 +177,7 @@ let getActivePatientsData = (params) => {
 
 // ajax call for rx Trend and Activated  data
 let getRxTrendAndActivatedData = (params) => {
+    chartLoadStart('rxTrendAndActivatedChart');
     let paramStr = prepareParamForChart(params);
 
     $.ajax({
@@ -302,22 +321,36 @@ let renderActivePatientsChart = (dataObj) => {
         return false;
     }
 
+    let groupedData = _.groupBy(dataObj, function (rec) {
+        return rec.MonthNo + "-" + rec.CreatedYear
+    });
+
     let categories = [], chartData = [];
     let actCount = dataObj[dataObj.length - 1].pCount;
 
-    for (let i = 0; i < dataObj.length; i++) {
+    for (let keys in groupedData) {
+        let currObj = groupedData[keys];
+        let currMonth = getMonthAndYearName(keys);
+
+        categories.push(currMonth);
+        chartData.push({ name: currMonth, y: currObj[0].pCount });
+    }
+
+    /*for (let i = 0; i < dataObj.length; i++) {
         let currObj = dataObj[i];
         let currMonth = getMonthName(currObj.MonthNo).name;
 
         categories.push(currMonth);
         chartData.push({ name: currMonth, y: currObj.pCount });
 
-    }
+    }*/
 
     // render chart
     Highcharts.chart(container, {
         chart: {
-            type: 'line'
+            type: 'line',
+            zoomType: 'x',
+            resetZoomButton: getStyleForZoomButton()
         },
         title: {
             text: ''
@@ -373,10 +406,26 @@ let renderRxTrendAndActivatedChart = (dataObj) => {
         return false;
     }
 
+    let groupedData = _.groupBy(dataObj, function (rec) {
+        return rec.Month + "-" + rec.CreatedYear
+    });
+
+
     let categories = [], rxData = [], activeData = [];
     let rxtotal = 0;
 
-    for (let i = 0; i < dataObj.length; i++) {
+    for (let keys in groupedData) {
+        let currObj = groupedData[keys];
+        let currMonth = getMonthAndYearName(keys);
+
+        categories.push(currMonth);
+        rxData.push({ name: currMonth, y: currObj[0].rxCount });
+        activeData.push({ name: currMonth, y: currObj[0].newAct });
+
+        rxtotal += currObj[0].rxCount;
+    }
+
+    /*for (let i = 0; i < dataObj.length; i++) {
         let currObj = dataObj[i];
         let currMonth = getMonthName(currObj.Month).name;
 
@@ -385,12 +434,14 @@ let renderRxTrendAndActivatedChart = (dataObj) => {
         activeData.push({ name: currMonth, y: currObj.newAct });
 
         rxtotal += currObj.rxCount;
-    }
+    }*/
 
     // render chart
     Highcharts.chart(container, {
         chart: {
-            type: 'line'
+            type: 'line',
+            zoomType: 'x',
+            resetZoomButton: getStyleForZoomButton()
         },
         title: {
             text: ''
@@ -469,13 +520,20 @@ let handleRxAndActiveChartClick = (pointObj, isFromPill) => {
     if (isFromPill) {
         paramStr += '##' + "Rx";
         paramStr += '##' + "NA";
+        paramStr += '##' + "NA";
     }
     else {
         // append point name which is clicked
         paramStr += '##' + pointObj.series.name;
 
+        // get month and year Id
+        let monthYear = pointObj.options.name.split(' ');
+
         // append month Id on which is clicked
-        paramStr += '##' + getMonthName(null, pointObj.options.name);
+        paramStr += '##' + getMonthName(null, monthYear[0]);
+
+        // append Year Id on which is clicked
+        paramStr += '##' + monthYear[1];
     }
 
     $.ajax({
@@ -496,10 +554,17 @@ let handleCummilativeChartClick = (pointObj, isFromPill) => {
 
     if (isFromPill) {
         paramStr += '##' + "NA";
+        paramStr += '##' + "NA";
     }
     else {
+        // get month and year Id
+        let monthYear = pointObj.options.name.split(' ');
+
         // append month Id on which is clicked
-        paramStr += '##' + getMonthName(null, pointObj.options.name);
+        paramStr += '##' + getMonthName(null, monthYear[0]);
+
+        // append Year Id on which is clicked
+        paramStr += '##' + monthYear[1];
     }
 
     $.ajax({
@@ -556,6 +621,13 @@ let chartLoadComplete = (chartId) => {
     $('#' + chartId + '-NoData').hide();
     $('#' + chartId + '-Loading').hide();
     $('#' + chartId).show();
+};
+
+// function to toggle the loading for the dataloading of chart
+let chartLoadStart = (chartId) => {
+    $('#' + chartId + '-NoData').hide();
+    $('#' + chartId + '-Loading').show();
+    $('#' + chartId).hide();
 };
 
 
@@ -918,3 +990,46 @@ let showNoDataFoundSection = (baseContainer) => {
     $('#' + baseContainer).hide();
     $('#' + baseContainer + '-NoData').show();
 };
+
+
+let getMonthAndYearName = (concatedStr) => {
+    let monthAndYear = concatedStr.split('-');
+    let mon = getMonthName(monthAndYear[0]).name, year = monthAndYear[1];
+
+    return mon + ' ' + year;
+};
+
+// function to return the style for zoom button
+let getStyleForZoomButton = () => {
+    return {
+        relativeTo: 'spacingBox',
+        position: {
+            y: 20,
+            x: 0
+        },
+        theme: {
+            fill: '#54b94c',
+            'stroke-width': 0,
+            stroke: 'none',
+            cursor: 'pointer',
+            color: 'white',
+            r: 2,
+            states: {
+                hover: {
+                    fill: '#54b94c'
+                },
+                select: {
+                    stroke: '#039',
+                    fill: '#ee4118'
+                }
+            },
+            plotShadow: true,
+            boxShadow: {
+                color: 'grey',
+                width: 10,
+                offsetX: 1,
+                offsetY: 1
+            }
+        }
+    };
+}

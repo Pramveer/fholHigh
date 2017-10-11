@@ -383,6 +383,7 @@ namespace FHOL
             string userID = string.Empty;
             string seriesName = string.Empty;
             string monthId = string.Empty;
+            string yearId = string.Empty;
             DateTime minDate = new DateTime();
             DateTime maxDate = new DateTime();
             string preparedQuery = string.Empty;
@@ -393,6 +394,7 @@ namespace FHOL
             maxDate = Convert.ToDateTime(paramArray[2]);
             seriesName = paramArray[3];
             monthId = paramArray[4];
+            yearId = paramArray[5];
 
             PhysicianDashBoard phd = new PhysicianDashBoard();
 
@@ -410,6 +412,11 @@ namespace FHOL
             if (monthId != "NA")
             {
                 preparedQuery += " AND DATEPART(MONTH, CreatedOn) = " + monthId;
+            }
+
+            if(yearId != "NA")
+            {
+                preparedQuery += " AND DATEPART(YEAR, CreatedOn) = " + yearId;
             }
 
             DataTable data = phd.getPatientsListForCharts(preparedQuery);
@@ -458,6 +465,7 @@ namespace FHOL
             strcon = ConfigurationManager.ConnectionStrings["EmbeddedConnectionString"].ConnectionString;
             string userID = string.Empty;
             string monthId = string.Empty;
+            string yearId = string.Empty;
             DateTime minDate = new DateTime();
             DateTime maxDate = new DateTime();
 
@@ -466,10 +474,15 @@ namespace FHOL
             minDate = Convert.ToDateTime(paramArray[1]);
             maxDate = Convert.ToDateTime(paramArray[2]);
             monthId = paramArray[3];
+            yearId = paramArray[4];
 
-            if(monthId == "NA")
+            if (monthId == "NA")
             {
                 monthId = "0";
+            }
+            if(yearId == "NA")
+            {
+                yearId = "0";
             }
 
             string query = "sp_getPatientListForCommulativeActivation";
@@ -482,6 +495,7 @@ namespace FHOL
             cmd.Parameters.AddWithValue("@MinDate", minDate);
             cmd.Parameters.AddWithValue("@MaxDate", maxDate);
             cmd.Parameters.AddWithValue("@MonthNum", monthId);
+            cmd.Parameters.AddWithValue("@YearNum", yearId);
 
             DbConnection.Open();
             cmd.ExecuteNonQuery();

@@ -116,8 +116,15 @@ button.ui-dialog-titlebar-close {
     width: 100%;
     text-align: center;
 }
+.noDataFoundForChartWrapper {
+    display: none;
+    background: #fff;
+    min-height: 350px;
+    text-align: center;
+    padding-top: 20%;
+}
 
-.noPatientsFound , .noDataFoundForChart {
+.noPatientsFound, .noDataFoundForChart {
     margin: 20px 0px;
     color: red;
     font-weight: bold;
