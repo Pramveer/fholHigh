@@ -82,6 +82,7 @@
                 </div>
                 <div class="loadingSection" id="rxTrendAndActivatedChart-Loading">Loading...</div>
                 <div class="chartArea" id="rxTrendAndActivatedChart"></div>
+                <div class="noDataFoundForChartWrapper" id="rxTrendAndActivatedChart-NoData"></div>
             </div>
 
             <!-- Rx trend and new Active Chart -->
@@ -96,6 +97,7 @@
                 </div>
                 <div class="loadingSection" id="enrolledPatientsChart-Loading">Loading...</div>
                 <div class="chartArea" id="enrolledPatientsChart"></div>
+                <div class="noDataFoundForChartWrapper" id="enrolledPatientsChart-NoData"></div>
             </div>
 
              <!-- Rx trend and new Active Chart -->
@@ -110,6 +112,7 @@
                 </div>
                 <div class="loadingSection" id="activePatientsChart-Loading">Loading...</div>
                 <div class="chartArea" id="activePatientsChart"></div>
+                <div class="noDataFoundForChartWrapper" id="activePatientsChart-NoData"></div>
             </div>
 
             <!-- Rx trend and new Active Chart -->

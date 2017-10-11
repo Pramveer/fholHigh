@@ -203,6 +203,12 @@ let renderEnrolledStatusChart = (dataObj) => {
     dataObj = dataObj[0];
     let allCount = 0;
 
+    if (!dataObj['allCount']) {
+        showNoDataFoundSection("enrolledPatientsChart");
+        $('.enrolledValue').html(0);
+        return false;
+    }
+
     let chartData = [];
    
     for (let keys in dataObj) {
@@ -290,6 +296,12 @@ let renderActivePatientsChart = (dataObj) => {
 
     dataObj = JSON.parse(dataObj.d);
 
+    if (dataObj.length < 1) {
+        showNoDataFoundSection("activePatientsChart");
+        $('.activatedValue').html(0);
+        return false;
+    }
+
     let categories = [], chartData = [];
     let actCount = dataObj[dataObj.length - 1].pCount;
 
@@ -354,6 +366,12 @@ let renderRxTrendAndActivatedChart = (dataObj) => {
     let container = "rxTrendAndActivatedChart";
 
     dataObj = JSON.parse(dataObj.d);
+
+    if (dataObj.length < 1) {
+        showNoDataFoundSection("rxTrendAndActivatedChart");
+        $('.prescribedValue').html(0);
+        return false;
+    }
 
     let categories = [], rxData = [], activeData = [];
     let rxtotal = 0;
@@ -535,6 +553,7 @@ let getMonthName = (monthId, monName) => {
 
 // function to toggle the loading for the dataloading of chart
 let chartLoadComplete = (chartId) => {
+    $('#' + chartId + '-NoData').hide();
     $('#' + chartId + '-Loading').hide();
     $('#' + chartId).show();
 };
@@ -889,4 +908,13 @@ let bindPatientComplianceComparative = (pointoption) => {
         }
     });
 
-}
+};
+
+// function to append msg for no data found for charts
+let showNoDataFoundSection = (baseContainer) => {
+    let html = `<div class="noDataFoundForChart">No data found for chart for the selection !</div>`;
+    $('#' + baseContainer + '-NoData').html(html);
+
+    $('#' + baseContainer).hide();
+    $('#' + baseContainer + '-NoData').show();
+};
