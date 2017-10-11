@@ -106,7 +106,6 @@ button.ui-dialog-titlebar-close {
 
 .patientListDialog {
     display: none;
-
 }
 
 .patientListContent {
@@ -116,15 +115,6 @@ button.ui-dialog-titlebar-close {
     background: #fff;
     width: 100%;
     text-align: center;
-}
-
-.noDataFoundForChartWrapper {
-    display: none;
-    border: 2px solid #cec9c9;
-    text-align: center;
-    min-height: 400px;
-    background: #fff;
-    padding-top: 20%;
 }
 
 .noPatientsFound , .noDataFoundForChart {

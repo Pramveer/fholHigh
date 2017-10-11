@@ -45,7 +45,7 @@ namespace FHOL
         public static int getUserID(string user)
         {
             int userid = 0;
-           string strcon = ConfigurationManager.ConnectionStrings["DBEmbeddedIndiaConnection"].ConnectionString;
+           string strcon = ConfigurationManager.ConnectionStrings["EmbeddedConnectionString"].ConnectionString;
             string sqlstringalert = "SELECT UserID from _User where UserName ='" + user + "';";
             SqlConnection DbConnection = new SqlConnection(strcon);
             DbConnection.Open();
@@ -221,7 +221,7 @@ namespace FHOL
 
         public DataTable getQueryDataForChart(string chartName, bool isProcedure, string paramData, bool isMultipleParams)
         {
-            strcon = ConfigurationManager.ConnectionStrings["DBEmbeddedIndiaConnection"].ConnectionString;
+            strcon = ConfigurationManager.ConnectionStrings["EmbeddedConnectionString"].ConnectionString;
             string query = string.Empty;
 
             string userID = string.Empty;
@@ -436,7 +436,7 @@ namespace FHOL
 
         DataTable getPatientsListForCharts(string query)
         {
-            strcon = ConfigurationManager.ConnectionStrings["DBEmbeddedIndiaConnection"].ConnectionString;
+            strcon = ConfigurationManager.ConnectionStrings["EmbeddedConnectionString"].ConnectionString;
 
             DbConnection = new SqlConnection(strcon);
             SqlCommand cmd = new SqlCommand(query, DbConnection);
@@ -455,7 +455,7 @@ namespace FHOL
 
         DataTable getPatientListFromProcedure(string paramData)
         {
-            strcon = ConfigurationManager.ConnectionStrings["DBEmbeddedIndiaConnection"].ConnectionString;
+            strcon = ConfigurationManager.ConnectionStrings["EmbeddedConnectionString"].ConnectionString;
             string userID = string.Empty;
             string monthId = string.Empty;
             DateTime minDate = new DateTime();
