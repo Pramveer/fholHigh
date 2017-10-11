@@ -24,6 +24,10 @@
   
 </head>
 <body>
+    <form runat="server" id="form1">
+        <asp:HiddenField ID="UserName" runat="server" />
+
+    </form>
     <div class="physicianDashboardContainer">
        
          <!-- Physician Dashboard Header -->

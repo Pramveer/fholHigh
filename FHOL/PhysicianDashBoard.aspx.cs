@@ -22,7 +22,7 @@ namespace FHOL
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            UserName.Value = Context.User.Identity.Name;
         }
 
         [WebMethod]
@@ -36,6 +36,24 @@ namespace FHOL
 
             return jsonString.ToString();
 
+        }
+
+
+        [WebMethod]
+        public static int getUserID(string user)
+        {
+            int userid = 0;
+           string strcon = ConfigurationManager.ConnectionStrings["DBEmbeddedIndiaConnection"].ConnectionString;
+            string sqlstringalert = "SELECT UserID from _User where UserName ='" + user + "';";
+            SqlConnection DbConnection = new SqlConnection(strcon);
+            DbConnection.Open();
+            SqlCommand comm = new SqlCommand(sqlstringalert, DbConnection);
+            comm.CommandTimeout = 0;
+            userid = Convert.ToInt16(comm.ExecuteScalar().ToString());
+            //string jsonString = string.Empty;
+            //jsonString = JsonConvert.SerializeObject(userid);
+            DbConnection.Close();
+            return userid;
         }
 
         [WebMethod]

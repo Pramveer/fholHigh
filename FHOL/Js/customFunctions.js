@@ -14,6 +14,7 @@ $(document).ready(function () {
     bindApplyEventForDateRange();
 
     bindPillClickEvent();
+    
 
     // remove the credits from the highcharts.
     if (Highcharts) {
@@ -28,7 +29,7 @@ $(document).ready(function () {
     let params = {
         minDate: minDate,
         maxDate: maxDate,
-        userID: "68" // "4222"
+        userID: getUserName($("#UserName").val()) 
     };
     userIDGlobal = params.userID;   
     getChartsData(params);
@@ -118,6 +119,26 @@ let getEnrolledPatientStatusData = (params) => {
         }
     });
 };
+
+let getUserName = (user) => {
+    var guserID = 4222; 
+    if (user != "")
+    {
+        $.ajax({
+            type: "POST",
+            url: "PhysicianDashBoard.aspx/getUserID",
+            data: JSON.stringify({ user: user }),
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                guserID = response.d; 
+            }
+        });
+    }
+    return parseInt(guserID);
+};
+
 
 // ajax call to get the active patients data
 let getActivePatientsData = (params) => {
