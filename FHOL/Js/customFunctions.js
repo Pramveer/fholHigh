@@ -492,6 +492,7 @@ let renderRxTrendAndActivatedChart = (dataObj) => {
 let handleEnrolledChartClick = (pointObj, isFromPill) => {
 
     let paramStr = getbaseFiltersForChartClick();
+    showMainOverlay();
 
     if (isFromPill) {
         paramStr += '##' + "NA";
@@ -508,6 +509,7 @@ let handleEnrolledChartClick = (pointObj, isFromPill) => {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
+            hideMainOverlay();
             renderPatientListOnPopup(response);
         }
     });
@@ -516,6 +518,8 @@ let handleEnrolledChartClick = (pointObj, isFromPill) => {
 // function to handle the chart click for the active and rx trend chart
 let handleRxAndActiveChartClick = (pointObj, isFromPill) => {
     let paramStr = getbaseFiltersForChartClick();
+
+    showMainOverlay();
 
     if (isFromPill) {
         paramStr += '##' + "Rx";
@@ -543,6 +547,7 @@ let handleRxAndActiveChartClick = (pointObj, isFromPill) => {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
+            hideMainOverlay();
             renderPatientListOnPopup(response);
         }
     });
@@ -551,6 +556,7 @@ let handleRxAndActiveChartClick = (pointObj, isFromPill) => {
 // function to handle the chart click for the active cummilative cahrt
 let handleCummilativeChartClick = (pointObj, isFromPill) => {
     let paramStr = getbaseFiltersForChartClick();
+    showMainOverlay();
 
     if (isFromPill) {
         paramStr += '##' + "NA";
@@ -574,6 +580,7 @@ let handleCummilativeChartClick = (pointObj, isFromPill) => {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
+            hideMainOverlay();
             renderPatientListOnPopup(response);
         }
     });
@@ -984,7 +991,7 @@ let bindPatientComplianceComparative = (pointoption) => {
 
 // function to append msg for no data found for charts
 let showNoDataFoundSection = (baseContainer) => {
-    let html = `<div class="noDataFoundForChart">No data found for chart for the selection !</div>`;
+    let html = `<div class="noDataFoundForChart">No data was found for the current selection !</div>`;
     $('#' + baseContainer + '-NoData').html(html);
 
     $('#' + baseContainer).hide();
@@ -1032,4 +1039,13 @@ let getStyleForZoomButton = () => {
             }
         }
     };
-}
+};
+
+
+let showMainOverlay = () => {
+    $('.fullPageLoadingOverlay').show();
+};
+
+let hideMainOverlay = () => {
+    $('.fullPageLoadingOverlay').hide();
+};

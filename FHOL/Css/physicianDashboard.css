@@ -151,3 +151,19 @@ button.ui-dialog-titlebar-close {
     text-align:left;
 }
 
+.fullPageLoadingOverlay {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(128, 128, 128, 0.49);
+    text-align: center;
+    padding-top: 27%;
+    z-index: 9;
+}
+
+.fullPageLoadingOverlay div {
+    font-size: 29px;
+    color: blue;
+    font-weight: bold;
+}

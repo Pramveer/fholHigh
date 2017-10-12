@@ -167,6 +167,10 @@
         </div>
 
     </div>
+    <!-- loading overlay for the file -->
+    <div class="fullPageLoadingOverlay">
+        <div>Loading Patients List..</div>
+    </div>
     </form>
 </body>
 </html>
