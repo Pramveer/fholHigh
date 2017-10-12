@@ -100,8 +100,8 @@ button.ui-dialog-titlebar-close {
     background: #fff;
     color: blue;
     font-weight: bold;
-    padding-top: 30%;
     font-size: 20px;
+    padding-top: 180px;
 }
 
 .patientListDialog {
@@ -117,8 +117,22 @@ button.ui-dialog-titlebar-close {
     text-align: center;
 }
 
-.noPatientsFound , .noDataFoundForChart {
-    margin: 20px 0px;
+.noDataFoundForChartWrapper {
+    width: 100%;
+    float: left;
+    background: #fff;
+    height: 400px;
+    text-align: center;
+}
+
+.noPatientsFound {
+    margin: 20px auto;
+    color: red;
+    font-weight: bold;
+}
+
+.noDataFoundForChart {
+    margin: 200px auto;
     color: red;
     font-weight: bold;
 }
