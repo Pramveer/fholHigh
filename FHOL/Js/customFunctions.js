@@ -24,7 +24,7 @@ $(document).ready(function () {
     let dateRange = $('input[name="physician_datePicker"]').val();
     dateRange = dateRange.split(' ');
 
-    let minDate = dateRange[0], maxDate = dateRange[2];
+    let minDate = formatDate(dateRange[0]), maxDate = formatDate(dateRange[2]);
 
     let params = {
         minDate: minDate,
@@ -62,8 +62,8 @@ let bindApplyEventForDateRange = () => {
     $('input[name="physician_datePicker"]').on('apply.daterangepicker', function (ev, picker) {
 
         let params = {
-            minDate: picker.startDate.format('YYYY-MM-DD'),
-            maxDate: picker.endDate.format('YYYY-MM-DD'),
+            minDate: picker.startDate.format('MM/DD/YYYY'),
+            maxDate: picker.endDate.format('MM/DD/YYYY'),
             userID: userIDGlobal
         };
 
@@ -139,7 +139,7 @@ let getEnrolledPatientStatusData = (params) => {
 
 let getUserName = (user) => {
     var guserID = 4222; 
-    if (user != "")
+    if (user !== "")
     {
         $.ajax({
             type: "POST",
@@ -322,7 +322,7 @@ let renderActivePatientsChart = (dataObj) => {
     }
 
     let groupedData = _.groupBy(dataObj, function (rec) {
-        return rec.MonthNo + "-" + rec.CreatedYear
+        return rec.MonthNo + "-" + rec.CreatedYear;
     });
 
     let categories = [], chartData = [];
@@ -407,7 +407,7 @@ let renderRxTrendAndActivatedChart = (dataObj) => {
     }
 
     let groupedData = _.groupBy(dataObj, function (rec) {
-        return rec.Month + "-" + rec.CreatedYear
+        return rec.Month + "-" + rec.CreatedYear;
     });
 
 
@@ -584,15 +584,15 @@ let handleCummilativeChartClick = (pointObj, isFromPill) => {
             renderPatientListOnPopup(response);
         }
     });
-        
-}
+
+};
 
 // function to get base filters for chart click
 let getbaseFiltersForChartClick = () => {
     let finalStr = null;
     let daterrange = $('input[name="physician_datePicker"]').val().split(' ');
 
-    finalStr = userIDGlobal + '##' + daterrange[0] + '##' + daterrange[2];
+    finalStr = userIDGlobal + '##' + formatDate(daterrange[0]) + '##' + formatDate(daterrange[2]);
 
     return finalStr;
     
@@ -722,7 +722,7 @@ let getFormattedDate = (date) => {
     date = new Date(date);
 
     return date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear();
-}
+};
 
 
 // ajax call to get the patient compliance
@@ -763,7 +763,7 @@ let ShowOpenAlerts = () => {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-           let html = ``;
+            let html = ``;
 
             dataList = JSON.parse(response.d);
 
@@ -778,10 +778,10 @@ let ShowOpenAlerts = () => {
                 </div>`;
             }
             //console.log(html);
-            showAlertPopup('Patient Details (N = ' + dataList.length + ')', html); 
+            showAlertPopup('Patient Details (N = ' + dataList.length + ')', html);
         }
     });
-} 
+}; 
 
 // ajax call to get the enrolled patients data
 let getPatientComplianceComparative = () => {
@@ -825,7 +825,7 @@ let renderPatientCompliance = (dataObj) => {
           },
           tooltip: {
               formatter: function () {
-                  if (this.point.name =="<8") 
+                  if (this.point.name === "<8") 
                       return '<span style="font-size:10px">&lt;8</span> <br>Patient counts with <b> &lt;8 </b> tests: <b>' + this.point.yValue + '</b>';
                   else 
                       return '<span style="font-size:10px">>=8 </span><br> Patient counts with <b> >=8 </b> tests: <b>' + this.point.yValue + '</b>';
@@ -893,7 +893,7 @@ let renderPatientComplianceComparative = (dataObj) => {
         },
         tooltip: {
             formatter: function () {
-                if (this.point.name == "<8")
+                if (this.point.name === "<8")
                     return '<span style="font-size:10px">&lt;8</span> <br>Patient counts with <b> &lt;8 </b> tests: <b>' + this.point.yValue + '</b>';
                 else
                     return '<span style="font-size:10px">>=8 </span><br> Patient counts with <b> >=8 </b> tests: <b>' + this.point.yValue + '</b>';
@@ -930,11 +930,11 @@ let renderPatientComplianceComparative = (dataObj) => {
 
 };
 
-let bindPatientCompliance = (dataUserId,pointoption) => {
+let bindPatientCompliance = (dataUserId, pointoption) => {
     $.ajax({
         type: "POST",
         url: "PhysicianDashBoard.aspx/getPatientComplianceDrillDown",
-        data: JSON.stringify({ userID: dataUserId, pointtype: pointoption  }),
+        data: JSON.stringify({ userID: dataUserId, pointtype: pointoption }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
@@ -952,12 +952,12 @@ let bindPatientCompliance = (dataUserId,pointoption) => {
                 <div class="col-md-3">${currPat.TestDate}</div>
                 </div>`;
             }
-           // console.log(html);
+            // console.log(html);
             showCompliancePopup('Patient Details (N = ' + dataList.length + ')', html);
         }
     });
 
-}
+};
 
 
 let bindPatientComplianceComparative = (pointoption) => {
@@ -1048,4 +1048,18 @@ let showMainOverlay = () => {
 
 let hideMainOverlay = () => {
     $('.fullPageLoadingOverlay').hide();
+};
+
+// function to format date in 'YYYY,MM,DD'
+let formatDate = (date) => {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    // return [year, month, day].join('-');
+    return [month, day, year].join('/');
 };

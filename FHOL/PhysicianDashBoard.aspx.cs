@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using System.Web.Script.Services;
 using System.Web.Script.Serialization;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace FHOL
 {
@@ -20,11 +21,13 @@ namespace FHOL
         string strcon = string.Empty;
         SqlConnection DbConnection = null;
 
+        static CultureInfo culture = null;
+
+
         protected void Page_Load(object sender, EventArgs e)
         {
- 
             UserName.Value = Context.User.Identity.Name;
- 
+            culture = new CultureInfo("en-US");
         }
 
         [WebMethod]
@@ -45,7 +48,7 @@ namespace FHOL
         public static int getUserID(string user)
         {
             int userid = 0;
-           string strcon = ConfigurationManager.ConnectionStrings["EmbeddedConnectionString"].ConnectionString;
+            string strcon = ConfigurationManager.ConnectionStrings["EmbeddedConnectionString"].ConnectionString;
             string sqlstringalert = "SELECT UserID from _User where UserName ='" + user + "';";
             SqlConnection DbConnection = new SqlConnection(strcon);
             DbConnection.Open();
@@ -232,8 +235,9 @@ namespace FHOL
             {
                 string[] paramArray = Regex.Split(paramData, "##");
                 userID = paramArray[0];
-                minDate = Convert.ToDateTime(paramArray[1]);
-                maxDate = Convert.ToDateTime(paramArray[2]);
+
+                minDate = Convert.ToDateTime(paramArray[1], culture);
+                maxDate = Convert.ToDateTime(paramArray[2], culture);
             }
             else
             {
@@ -289,20 +293,20 @@ namespace FHOL
             {
                 case "enrolledStatus":
                     cmd.Parameters.AddWithValue("@PrescribingECPID", userID);
-                    cmd.Parameters.AddWithValue("@MinDate", minDate);
-                    cmd.Parameters.AddWithValue("@MaxDate", maxDate);
+                    cmd.Parameters.AddWithValue("@MinDate", minDate.Date.ToString("yyyy-MM-dd HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("@MaxDate", maxDate.Date.ToString("yyyy-MM-dd HH:mm:ss"));
                     break;
 
                 case "activePatients":
                     cmd.Parameters.AddWithValue("@PrescribingECPID", userID);
-                    cmd.Parameters.AddWithValue("@MinDate", minDate);
-                    cmd.Parameters.AddWithValue("@MaxDate", maxDate);
+                    cmd.Parameters.AddWithValue("@MinDate", minDate.Date.ToString("yyyy-MM-dd HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("@MaxDate", maxDate.Date.ToString("yyyy-MM-dd HH:mm:ss"));
                     break;
 
                 case "rxTrendActivated":
                     cmd.Parameters.AddWithValue("@PrescribingECPID", userID);
-                    cmd.Parameters.AddWithValue("@MinDate", minDate);
-                    cmd.Parameters.AddWithValue("@MaxDate", maxDate);
+                    cmd.Parameters.AddWithValue("@MinDate", minDate.Date.ToString("yyyy-MM-dd HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("@MaxDate", maxDate.Date.ToString("yyyy-MM-dd HH:mm:ss"));
                     break;
 
                 case "patientList":
@@ -343,8 +347,8 @@ namespace FHOL
 
             string[] paramArray = Regex.Split(dataParams, "##");
             userID = paramArray[0];
-            minDate = Convert.ToDateTime(paramArray[1]);
-            maxDate = Convert.ToDateTime(paramArray[2]);
+            minDate = Convert.ToDateTime(paramArray[1], culture);
+            maxDate = Convert.ToDateTime(paramArray[2], culture);
             pointName = paramArray[3];
 
             PhysicianDashBoard phd = new PhysicianDashBoard();
@@ -390,8 +394,8 @@ namespace FHOL
 
             string[] paramArray = Regex.Split(dataParams, "##");
             userID = paramArray[0];
-            minDate = Convert.ToDateTime(paramArray[1]);
-            maxDate = Convert.ToDateTime(paramArray[2]);
+            minDate = Convert.ToDateTime(paramArray[1], culture);
+            maxDate = Convert.ToDateTime(paramArray[2], culture);
             seriesName = paramArray[3];
             monthId = paramArray[4];
             yearId = paramArray[5];
@@ -414,7 +418,7 @@ namespace FHOL
                 preparedQuery += " AND DATEPART(MONTH, CreatedOn) = " + monthId;
             }
 
-            if(yearId != "NA")
+            if (yearId != "NA")
             {
                 preparedQuery += " AND DATEPART(YEAR, CreatedOn) = " + yearId;
             }
@@ -471,8 +475,8 @@ namespace FHOL
 
             string[] paramArray = Regex.Split(paramData, "##");
             userID = paramArray[0];
-            minDate = Convert.ToDateTime(paramArray[1]);
-            maxDate = Convert.ToDateTime(paramArray[2]);
+            minDate = Convert.ToDateTime(paramArray[1], culture);
+            maxDate = Convert.ToDateTime(paramArray[2], culture);
             monthId = paramArray[3];
             yearId = paramArray[4];
 
@@ -480,7 +484,7 @@ namespace FHOL
             {
                 monthId = "0";
             }
-            if(yearId == "NA")
+            if (yearId == "NA")
             {
                 yearId = "0";
             }
@@ -492,8 +496,8 @@ namespace FHOL
             cmd.CommandTimeout = 0;
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@PrescribingECPID", userID);
-            cmd.Parameters.AddWithValue("@MinDate", minDate);
-            cmd.Parameters.AddWithValue("@MaxDate", maxDate);
+            cmd.Parameters.AddWithValue("@MinDate", minDate.Date.ToString("yyyy-MM-dd HH:mm:ss"));
+            cmd.Parameters.AddWithValue("@MaxDate", maxDate.Date.ToString("yyyy-MM-dd HH:mm:ss"));
             cmd.Parameters.AddWithValue("@MonthNum", monthId);
             cmd.Parameters.AddWithValue("@YearNum", yearId);
 
@@ -513,7 +517,7 @@ namespace FHOL
             string query = "";
 
             query = "SELECT PatientID , DateOfBirth, FirstName, LastName FROM ContactBase WHERE Active = 1 AND PrescribingECPID = " + userID;
-            query += " AND CreatedOn BETWEEN '" + minDate + "' AND '" + maxDate + "'";
+            query += " AND CreatedOn BETWEEN '" + minDate.Date.ToString("yyyy-MM-dd HH:mm:ss") + "' AND '" + maxDate.Date.ToString("yyyy-MM-dd HH:mm:ss") + "'";
 
             return query;
         }
